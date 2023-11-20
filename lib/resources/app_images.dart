@@ -13,4 +13,6 @@ class AppImages {
   static const String pastawithseafood = 'assets/images/Pastawithseafood.jpg';
   static const String pokeboul1 = 'assets/images/pokeboul1.jpg';
   static const String steakonBoard = 'assets/images/steakonBoard.png';
+  static const String avatarImage = 'assets/images/avatar.png';
+  static const String pizza = 'assets/images/pizza.jpg';
 }
