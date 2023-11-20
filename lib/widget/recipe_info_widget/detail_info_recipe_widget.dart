@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/resources/resources.dart';
+
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,7 @@ class DetailInfoRecipeWidget extends StatefulWidget {
 
 class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   bool ingridientsHave = false;
+
   // Map<String, dynamic>? mealData;
   Map<String, dynamic>? meals;
   List<String> instructions = [];
@@ -166,19 +168,17 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: SizedBox(
-                                    height: 55,
-                                    width: 55,
+                                    height: 45,
+                                    width: 45,
                                     child: IconButton(
                                       icon: isFavorite
-                                          ? Icon(
+                                          ? const Icon(
                                               Icons.favorite,
                                               size: 25,
                                               color: Colors.black,
                                             )
                                           : RiveAnimation.asset(
-                                              'assets/heart.riv',
-                                              fit: BoxFit.cover,
-                                            ),
+                                              'assets/heart.riv'),
                                       onPressed: toggleFavorite,
                                       iconSize: 24.0,
                                     ),
