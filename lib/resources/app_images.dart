@@ -15,4 +15,5 @@ class AppImages {
   static const String steakonBoard = 'assets/images/steakonBoard.png';
   static const String avatarImage = 'assets/images/avatar.png';
   static const String pizza = 'assets/images/pizza.jpg';
+  static const String heart = 'assets/vehicles.riv';
 }

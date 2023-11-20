@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
+import 'package:dz_2/resources/resources.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../changenotif.dart';
 import '../comment_widget.dart';
+import 'package:rive/rive.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
   const DetailInfoRecipeWidget({super.key});
@@ -18,8 +20,6 @@ class DetailInfoRecipeWidget extends StatefulWidget {
 }
 
 class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
-  bool isFavorite = false;
-
   bool ingridientsHave = false;
   // Map<String, dynamic>? mealData;
   Map<String, dynamic>? meals;
@@ -62,6 +62,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     loadData();
   }
 
+  bool isFavorite = true;
   void toggleFavorite() {
     setState(() {
       isFavorite = !isFavorite;
@@ -163,19 +164,44 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                       fontSize: 24.0),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      isFavorite
-                                          ? Icons.favorite
-                                          : Icons.favorite,
-                                      color: isFavorite
-                                          ? Colors.red
-                                          : Colors.black,
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: SizedBox(
+                                    height: 55,
+                                    width: 55,
+                                    child: IconButton(
+                                      icon: isFavorite
+                                          ? Icon(
+                                              Icons.favorite,
+                                              size: 25,
+                                              color: Colors.black,
+                                            )
+                                          : RiveAnimation.asset(
+                                              'assets/heart.riv',
+                                              fit: BoxFit.cover,
+                                            ),
+                                      onPressed: toggleFavorite,
+                                      iconSize: 24.0,
                                     ),
-                                    onPressed: toggleFavorite,
-                                    iconSize: 24.0,
+                                    // isFavorite
+                                    // ? RiveAnimation.asset(
+                                    //     'assets/heart.riv')
+                                    //     : Icon(
+                                    //         Icons.favorite,
+                                    //         color: Colors.black,
+                                    //       )
                                   ),
+                                  // IconButton(
+                                  //   icon: Icon(
+                                  //     isFavorite
+                                  //         ? Icons.favorite
+                                  //         : Icons.favorite,
+                                  //     color: isFavorite
+                                  //         ? Colors.red
+                                  //         : Colors.black,
+                                  //   ),
+                                  //   onPressed: toggleFavorite,
+                                  //   iconSize: 24.0,
+                                  // ),
                                 ),
                               ],
                             ),
