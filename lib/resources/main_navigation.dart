@@ -21,7 +21,7 @@ class MainNavigation {
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
     '/recipes': (context) => const RecipesModelListWidget(),
-    '/recipeInfo': (context) => const DetailInfoRecipeWidget(),
+    '/recipeInfo': (context) => DetailInfoRecipeWidget(),
     // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),
   };
@@ -31,8 +31,29 @@ class MainNavigation {
       case MainNavigationRouteNames.recipeInfoWidget:
         final arguments = settings.arguments;
         final recipeid = arguments is int ? arguments : 0;
-        return MaterialPageRoute(
-            builder: (context) => RecipeInfoWidget(recipeid: recipeid));
+        return PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            animation = CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+            );
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            );
+          },
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return RecipeInfoWidget(recipeid: recipeid);
+          },
+        );
       default:
         const widget = Text('Navigation error');
         return MaterialPageRoute(builder: (context) => widget);

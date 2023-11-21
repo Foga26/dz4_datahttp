@@ -1,4 +1,5 @@
 import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
+import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecipeInfoWidget extends StatefulWidget {
@@ -14,7 +15,9 @@ class _RecipeInfoWidgetState extends State<RecipeInfoWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [DetailInfoRecipeWidget()],
+        children: [
+          DetailInfoRecipeWidget(),
+        ],
       ),
     );
   }
