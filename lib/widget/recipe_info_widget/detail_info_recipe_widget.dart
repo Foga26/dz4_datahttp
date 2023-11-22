@@ -2,12 +2,8 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/widget/page_route_animation.dart';
-
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
-import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -83,8 +79,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Widget build(BuildContext context) {
     var isExpanded = Provider.of<Test>(context).isExpanded;
     var isTimerVisible = Provider.of<Test>(context).isTimerVisible;
-    final strInstructions = meals?['strInstructions'].toString();
-    instructions = strInstructions!.split("\r\n");
+    final strInstructions =
+        meals?['strInstructions'].toString() ?? ''.toString();
+    instructions = strInstructions.split("\r\n");
     chekboxValues = List<bool>.filled(instructions.length, false);
 
     final test = StepCookWidget(
@@ -135,12 +132,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
             appBar: AppBar(
               backgroundColor:
                   isTimerVisible ? ColorApp.textColorGreen : Colors.white,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context, backToRecipesList);
-                },
-              ),
               iconTheme: const IconThemeData(color: Colors.black),
               toolbarHeight: 60,
               actions: const [
