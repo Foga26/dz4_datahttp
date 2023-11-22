@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
+import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
