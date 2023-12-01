@@ -40,7 +40,12 @@ dependencies:
   flutter_network_connectivity:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
-  rive: ^0.12.3
+
+  image_picker:
+  carousel_slider:
+  camera:
+  video_player:
+  flutter_camera:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -48,6 +53,7 @@ dependencies:
   
   unicons: ^2.1.1
   connectivity: ^3.0.6
+  rive: ^0.12.3
   
 
 dev_dependencies:

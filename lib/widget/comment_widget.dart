@@ -1,5 +1,10 @@
+import 'dart:io';
 import 'package:dz_2/resources/resources.dart';
+import 'package:dz_2/widget/galery_from_camera.dart';
+
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../resources/app_color.dart';
 
@@ -26,9 +31,84 @@ class CommentScreen extends StatefulWidget {
   _CommentScreenState createState() => _CommentScreenState();
 }
 
+// Получение файла либо с камеры либо с галерии
 class _CommentScreenState extends State<CommentScreen> {
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future<void> _getImageFromCamera(BuildContext context) async {
+    final XFile? imageFromcam =
+        await _imagePicker.pickImage(source: ImageSource.camera);
+
+    if (imageFromcam != null) {
+      File file = File(imageFromcam.path);
+      fileIm = file;
+      final imageBox = Hive.box('imagesFromCam');
+      imageBox.add(file.path);
+      print(imageBox);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Изображение успешно сохранено')));
+    }
+
+    // ignore: void_checks
+  }
+
+  Future<void> _getImageFromDatabase(BuildContext context) async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ImageListScreen()));
+
+    // final imageBox = Hive.box('images');
+    // final imagePath = imageBox.get('image') as String?;
+
+    // if (imagePath != null) {
+    //   final File fileFromDB = File(imagePath);
+    //   fileDB = fileFromDB;
+
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text('Изображение загружено')));
+
+    //   // Действия с загруженным изображением
+    //   // Например, отображение или обработка
+    // } else {
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text('Изображение не найдено')));
+    // }
+  }
+
+  // Future<void> getFile(ImageSource source, BuildContext context) async {
+  //   try {
+  //     print(source);
+  //     final XFile? file = _isVideo
+  //         // ignore: invalid_use_of_visible_for_testing_member
+  //         ? await ImagePicker.platform.getVideo(source: source)
+  //         // ignore: invalid_use_of_visible_for_testing_member
+  //         : await ImagePicker.platform.getImageFromSource(source: source);
+  //     setState(() {
+  //       if (file != null) {
+  //         _file = File(file.path);
+  //         fileIm = _file?.readAsBytes();
+  //       } else {
+  //         Text('No image selected.');
+  //       }
+
+  //       _showBottomSheet(context);
+  //     });
+  //     return await fileIm;
+
+  //     // return fileImage;
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   final List<Comment> comments = [];
   final TextEditingController _commentController = TextEditingController();
+
+  // File? _file;
+  // bool _isVideo = false;
+  // ignore: prefer_typing_uninitialized_variables
+  var fileIm;
+  var fileDB;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +156,16 @@ class _CommentScreenState extends State<CommentScreen> {
                     child: SizedBox(
                         width: 314,
                         height: 160,
-                        child: Image.asset(comment.images)),
+                        child: fileIm == null
+                            ? Text('No image selected.')
+                            : Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: FileImage(fileIm!),
+                                        fit: BoxFit.cover)),
+                              )),
                   ),
                   Padding(
                     padding:
@@ -107,6 +196,18 @@ class _CommentScreenState extends State<CommentScreen> {
                 border: const OutlineInputBorder(borderSide: BorderSide()),
                 hintText: 'Оставить комментарий',
                 suffixIconColor: ColorApp.textColorDarkGreen,
+                prefixIcon: IconButton(
+                  icon: Icon(Icons.camera_alt),
+                  onPressed: () {
+                    _getImageFromCamera(context);
+                  },
+                ),
+                icon: IconButton(
+                  onPressed: () {
+                    _getImageFromDatabase(context);
+                  },
+                  icon: Icon(Icons.add_a_photo),
+                ),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
