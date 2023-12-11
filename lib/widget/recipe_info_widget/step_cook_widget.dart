@@ -23,13 +23,21 @@ class StepCookWidget extends StatefulWidget {
   State<StepCookWidget> createState() => _StepCookWidgetState();
 }
 
-class _StepCookWidgetState extends State<StepCookWidget> {
+class _StepCookWidgetState extends State<StepCookWidget>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+  Animation<double>? _animation;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 1.0, end: 1.5).animate(
+        CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
   }
-
-  bool readyChekbox = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,28 +101,40 @@ class _StepCookWidgetState extends State<StepCookWidget> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(top: 33, left: 3),
-                                  child: SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: Checkbox(
-                                        tristate: false,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        side: BorderSide(
-                                            width: 4,
-                                            color: ready
-                                                ? ColorApp.textColorDarkGreen
-                                                : ColorApp.colorGrey),
-                                        value: widget.chekValues[index],
-                                        onChanged: ready
-                                            ? (value) {
-                                                setState(() {
-                                                  widget.chekValues[index] =
-                                                      value;
-                                                });
-                                              }
-                                            : null),
+                                  child: AnimatedBuilder(
+                                    animation: _animation!,
+                                    builder: (context, child) {
+                                      return Transform.scale(
+                                        scale: _animation?.value,
+                                        child: SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Checkbox(
+                                              tristate: false,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              side: BorderSide(
+                                                  width: 4,
+                                                  color: ready
+                                                      ? ColorApp
+                                                          .textColorDarkGreen
+                                                      : ColorApp.colorGrey),
+                                              value: widget.chekValues[index],
+                                              onChanged: ready
+                                                  ? (value) {
+                                                      setState(() {
+                                                        widget.chekValues[
+                                                            index] = value!;
+                                                      });
+
+                                                      // widget.chekValues[
+                                                      //     index] = value;
+                                                    }
+                                                  : null),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 Padding(

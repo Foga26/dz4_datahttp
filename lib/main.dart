@@ -33,7 +33,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => Test())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => Test()),
+      ],
       child: MaterialApp(
         routes: mainNavigation.routes,
         initialRoute: MainNavigationRouteNames.mainPage,

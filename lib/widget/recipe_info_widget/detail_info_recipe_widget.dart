@@ -129,22 +129,79 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         },
         child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor:
-                  isTimerVisible ? ColorApp.textColorGreen : Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
-              toolbarHeight: 60,
-              actions: const [
-                Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(CustomIcons.megafone),
+            appBar: PreferredSize(
+              preferredSize:
+                  isTimerVisible ? Size.fromHeight(100) : Size.fromHeight(60),
+              child: AppBar(
+                flexibleSpace: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 60,
+                      ),
+                      child: const Text(
+                        'Рецепт',
+                        style: TextStyle(
+                            color: ColorApp.textColorDarkGreen, fontSize: 23),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Visibility(
+                          visible: isTimerVisible,
+                          child: Container(
+                            height: isTimerVisible ? 50 : 0,
+                            width: isTimerVisible ? double.infinity : 0,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: isTimerVisible
+                                  ? ColorApp.textColorGreen
+                                  : Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 90),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Таймер",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: isTimerVisible
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 80),
+                                    child: Text(
+                                      '38:59',
+                                      style: TextStyle(
+                                        color: isTimerVisible
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
-              ],
-              title: const Text(
-                'Рецепт',
-                style: TextStyle(color: ColorApp.textColorDarkGreen),
+                backgroundColor:
+                    isTimerVisible ? ColorApp.textColorGreen : Colors.white,
+                iconTheme: const IconThemeData(color: Colors.black),
+                toolbarHeight: 50,
+                actions: const [
+                  Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Icon(CustomIcons.megafone),
+                  ),
+                ],
+                centerTitle: true,
               ),
-              centerTitle: true,
             ),
             body: CustomScrollView(
                 shrinkWrap: true,
@@ -157,29 +214,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            height: isExpanded ? 0 : 0,
-                            width: isExpanded ? 0 : 0,
-                            child: Container(),
-                          ),
-                          Visibility(
-                              visible: isTimerVisible,
-                              child: Container(
-                                height: isTimerVisible ? 59 : 0,
-                                width: isTimerVisible ? double.infinity : 0,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: isTimerVisible
-                                      ? ColorApp.textColorGreen
-                                      : Colors.white,
-                                ),
-                                child: Text(
-                                  "Таймер: 00:00",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.black),
-                                ),
-                              )),
                           Padding(
                             padding: const EdgeInsets.only(top: 15, left: 17),
                             child: Row(
