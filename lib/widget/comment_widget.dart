@@ -1,25 +1,33 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'package:dz_2/resources/resources.dart';
-import 'package:provider/provider.dart';
 
 import '../resources/app_color.dart';
 
 var date = [DateTime.now().day, DateTime.now().month, DateTime.now().year]
     .map((e) => e.toString());
 
+class ListComments {
+  List<Comment> listText = [];
+  List<Comment> listImage = [];
+}
+
 class Comment {
-  final String text;
+  String text;
   final String avatar = AppImages.avatarImage;
   final String nickname = 'lybitel_vkusno_poest';
-
+  var imageComment;
   final String datecomment = date.join('.');
 
   Comment(
     this.text,
+    this.imageComment,
   );
 }
 
@@ -44,7 +52,6 @@ class _CommentScreenState extends State<CommentScreen> {
       fileIm = file.path;
       final imageBox = Hive.box('imagesFromCam');
       imageBox.add(file.path);
-      print(imageBox);
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Изображение успешно сохранено')));
@@ -53,7 +60,27 @@ class _CommentScreenState extends State<CommentScreen> {
     // ignore: void_checks
   }
 
+  void addCommentFromDataBase() {
+    String commentText = _commentController.text;
+    comments.add(Comment(commentText, fileDB));
+    _commentController.clear();
+  }
+
+  void addCommentNotImage() {
+    String commentText = _commentController.text;
+    comments.add(Comment(commentText, null));
+    _commentController.clear();
+  }
+
+  void addCommentfromCam() {
+    String commentText = _commentController.text;
+
+    comments.add(Comment(commentText, fileIm));
+    _commentController.clear();
+  }
+
   final List<Comment> comments = [];
+  final List<ListComments> com = [];
   final TextEditingController _commentController = TextEditingController();
 
   // File? _file;
@@ -102,53 +129,25 @@ class _CommentScreenState extends State<CommentScreen> {
                           fontWeight: FontWeight.w400),
                     ),
                   ),
-                  fileDB == null && fileIm == null
-                      ? Container()
-                      : Padding(
-                          padding: const EdgeInsets.only(
-                              top: 100, left: 98, right: 17, bottom: 35),
-                          child: SizedBox(
-                            width: 314,
-                            height: 160,
-                            child:
-                                // fileIm == null || comment.images.isEmpty
-                                //     ? Text('No image selected.')
-                                //     :
-                                Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: FileImage((File(
-                                          fileDB == null ? fileIm : fileDB))),
-                                      fit: BoxFit.cover)),
-                            ),
-                          ),
-                        ),
-                  fileIm != null && fileDB == null
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              top: 100, left: 98, right: 17, bottom: 35),
-                          child: SizedBox(
-                              width: 314,
-                              height: 160,
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: FileImage((File(fileIm))),
-                                        fit: BoxFit.cover)),
-                              )))
-                      : Container(),
                   Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 312, right: 5),
-                    child: Text(
-                      comment.datecomment,
-                      style: const TextStyle(
-                          color: ColorApp.iconColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
+                    padding: const EdgeInsets.only(
+                        top: 100, left: 98, right: 17, bottom: 35),
+                    child: SizedBox(
+                      width: 314,
+                      height: 160,
+                      child:
+                          // fileIm == null || comment.images.isEmpty
+                          //     ? Text('No image selected.')
+                          //     :
+                          Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: FileImage((File(comment.imageComment
+                                    // fileDB == null ? fileIm : fileDB
+                                    ))), fit: BoxFit.cover)),
+                      ),
                     ),
                   ),
                 ],
@@ -241,6 +240,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                               Text('Изображение выбрано')));
                                                                   Navigator.pop(
                                                                       context);
+                                                                  setState(
+                                                                      () {});
                                                                 }
                                                               },
 
@@ -304,13 +305,17 @@ class _CommentScreenState extends State<CommentScreen> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    String commentText = _commentController.text;
-                    if (commentText.isNotEmpty) {
-                      setState(() {
-                        comments.add(Comment(commentText));
-                        _commentController.clear();
-                      });
-                    }
+                    if (fileDB != null && _commentController.text.isNotEmpty) {
+                      addCommentFromDataBase();
+                    } else if (fileDB == null && fileIm == null) {
+                      addCommentNotImage();
+                    } else if (fileIm != null &&
+                        _commentController.text.isNotEmpty) addCommentfromCam();
+                    setState(() {
+                      fileDB = null;
+                      fileIm = null;
+                    });
+                    ;
                   },
                 ),
               ),
