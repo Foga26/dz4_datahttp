@@ -306,6 +306,7 @@ class _CommentScreenState extends State<CommentScreen> {
                   icon: const Icon(Icons.send),
                   onPressed: () {
                     if (fileDB != null && _commentController.text.isNotEmpty) {
+                      //тут мы проверяем какая картинка выбрана
                       addCommentFromDataBase();
                     } else if (fileDB == null && fileIm == null) {
                       addCommentNotImage();
@@ -313,7 +314,8 @@ class _CommentScreenState extends State<CommentScreen> {
                         _commentController.text.isNotEmpty) addCommentfromCam();
                     setState(() {
                       fileDB = null;
-                      fileIm = null;
+                      fileIm =
+                          null; //после отправки комента картинки обнуляются чтобы сделать новый выбор
                     });
                     ;
                   },
