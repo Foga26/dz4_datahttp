@@ -1,5 +1,4 @@
 import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
-import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecipeInfoWidget extends StatefulWidget {

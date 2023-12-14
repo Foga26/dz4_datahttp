@@ -32,7 +32,7 @@ class MainNavigation {
         final arguments = settings.arguments;
         final recipeid = arguments is int ? arguments : 0;
         return PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
@@ -41,13 +41,19 @@ class MainNavigation {
               parent: animation,
               curve: Curves.easeOut,
             );
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            );
+            if (animation.status == AnimationStatus.reverse) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            } else {
+              return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child);
+            }
           },
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {

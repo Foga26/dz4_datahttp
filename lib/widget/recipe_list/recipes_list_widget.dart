@@ -1,6 +1,4 @@
 import 'package:dz_2/resources/main_navigation.dart';
-import 'package:dz_2/widget/page_route_animation.dart';
-import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 import '../../resources/app_color.dart';
