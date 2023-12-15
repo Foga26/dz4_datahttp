@@ -131,7 +131,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
             backgroundColor: Colors.white,
             appBar: PreferredSize(
               preferredSize:
-                  isTimerVisible ? Size.fromHeight(100) : Size.fromHeight(60),
+                  isTimerVisible ? Size.fromHeight(120) : Size.fromHeight(75),
               child: AppBar(
                 flexibleSpace: Column(
                   children: [
