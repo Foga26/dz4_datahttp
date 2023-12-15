@@ -124,8 +124,14 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                               onChanged: ready
                                                   ? (value) {
                                                       setState(() {
-                                                        widget.chekValues[
-                                                            index] = value!;
+                                                        if (widget.chekValues[
+                                                            index] = value!) {
+                                                          _controller
+                                                              ?.forward();
+                                                        } else {
+                                                          _controller
+                                                              ?.reverse();
+                                                        }
                                                       });
 
                                                       // widget.chekValues[

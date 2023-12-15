@@ -13,11 +13,6 @@ import '../resources/app_color.dart';
 var date = [DateTime.now().day, DateTime.now().month, DateTime.now().year]
     .map((e) => e.toString());
 
-class ListComments {
-  List<Comment> listText = [];
-  List<Comment> listImage = [];
-}
-
 class Comment {
   String text;
   final String avatar = AppImages.avatarImage;
@@ -49,7 +44,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
     if (imageFromcam != null) {
       File file = File(imageFromcam.path);
-      fileIm = file.path;
+      fileImageFromCam = file.path;
       final imageBox = Hive.box('imagesFromCam');
       imageBox.add(file.path);
 
@@ -62,7 +57,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
   void addCommentFromDataBase() {
     String commentText = _commentController.text;
-    comments.add(Comment(commentText, fileDB));
+    comments.add(Comment(commentText, fileFromDataBase));
     _commentController.clear();
   }
 
@@ -75,19 +70,15 @@ class _CommentScreenState extends State<CommentScreen> {
   void addCommentfromCam() {
     String commentText = _commentController.text;
 
-    comments.add(Comment(commentText, fileIm));
+    comments.add(Comment(commentText, fileImageFromCam));
     _commentController.clear();
   }
 
   final List<Comment> comments = [];
-  final List<ListComments> com = [];
   final TextEditingController _commentController = TextEditingController();
 
-  // File? _file;
-  // bool _isVideo = false;
-  // ignore: prefer_typing_uninitialized_variables
-  var fileIm;
-  var fileDB;
+  var fileImageFromCam;
+  var fileFromDataBase;
 
   @override
   Widget build(BuildContext context) {
@@ -228,10 +219,10 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                   int index) {
                                                             return GestureDetector(
                                                               onTap: () {
-                                                                fileDB =
+                                                                fileFromDataBase =
                                                                     (imagePaths[
                                                                         index]);
-                                                                if (fileDB !=
+                                                                if (fileFromDataBase !=
                                                                     null) {
                                                                   ScaffoldMessenger.of(
                                                                           context)
@@ -240,8 +231,6 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                               Text('Изображение выбрано')));
                                                                   Navigator.pop(
                                                                       context);
-                                                                  setState(
-                                                                      () {});
                                                                 }
                                                               },
 
@@ -305,17 +294,24 @@ class _CommentScreenState extends State<CommentScreen> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    if (fileDB != null && _commentController.text.isNotEmpty) {
+                    if (fileFromDataBase != null &&
+                        _commentController.text.isNotEmpty) {
                       //тут мы проверяем какая картинка выбрана
                       addCommentFromDataBase();
-                    } else if (fileDB == null && fileIm == null) {
+                    } else if (fileFromDataBase == null &&
+                        fileImageFromCam == null) {
                       addCommentNotImage();
-                    } else if (fileIm != null &&
+                    } else if (fileImageFromCam != null &&
                         _commentController.text.isNotEmpty) addCommentfromCam();
                     setState(() {
-                      fileDB = null;
-                      fileIm =
+                      fileFromDataBase = null;
+                      fileImageFromCam =
                           null; //после отправки комента картинки обнуляются чтобы сделать новый выбор
+                      void dispose() {
+                        _commentController.dispose();
+                        Hive.close();
+                        super.dispose();
+                      }
                     });
                     ;
                   },
