@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dz_2/widget/tflite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -17,7 +18,7 @@ class Comment {
   String text;
   final String avatar = AppImages.avatarImage;
   final String nickname = 'lybitel_vkusno_poest';
-  var imageComment;
+  String? imageComment;
   final String datecomment = date.join('.');
 
   Comment(
@@ -120,27 +121,34 @@ class _CommentScreenState extends State<CommentScreen> {
                           fontWeight: FontWeight.w400),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 100, left: 98, right: 17, bottom: 35),
-                    child: SizedBox(
-                      width: 314,
-                      height: 160,
-                      child:
-                          // fileIm == null || comment.images.isEmpty
-                          //     ? Text('No image selected.')
-                          //     :
-                          Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: FileImage((File(comment.imageComment
-                                    // fileDB == null ? fileIm : fileDB
-                                    ))), fit: BoxFit.cover)),
-                      ),
-                    ),
-                  ),
+                  comment.imageComment == null
+                      ? Container(
+                          width: 1,
+                          height: 1,
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              top: 100, left: 98, right: 17, bottom: 35),
+                          child: SizedBox(
+                            width: 314,
+                            height: 160,
+                            child:
+                                // fileIm == null || comment.images.isEmpty
+                                //     ? Text('No image selected.')
+                                //     :
+                                Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: FileImage((File(
+                                          comment.imageComment!
+                                          // fileDB == null ? fileIm : fileDB
+                                          ))),
+                                      fit: BoxFit.cover)),
+                            ),
+                          ),
+                        ),
                 ],
               ),
             );
@@ -166,10 +174,17 @@ class _CommentScreenState extends State<CommentScreen> {
                         context: context,
                         builder: (context) {
                           return SizedBox(
-                            height: 150,
+                            height: 250,
                             child: Center(
                               child: Column(
                                 children: [
+                                  TextButton(
+                                    onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MyApppp())),
+                                    child: Text('dasd'),
+                                  ),
                                   TextButton(
                                       onPressed: () =>
                                           _getImageFromCamera(context),

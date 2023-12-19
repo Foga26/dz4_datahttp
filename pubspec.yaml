@@ -40,12 +40,13 @@ dependencies:
   flutter_network_connectivity:
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
-
+  tflite_flutter: ^0.10.4
   image_picker:
   carousel_slider:
   camera:
   video_player:
   flutter_camera:
+  flutter_tflite:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -87,6 +88,7 @@ flutter:
   assets:
    - assets/images/
    - assets/heart.riv
+   - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
