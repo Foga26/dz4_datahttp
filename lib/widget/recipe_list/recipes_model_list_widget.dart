@@ -11,11 +11,16 @@ Future<List<Category>> fetchData() async {
   if (connectivityResult == ConnectivityResult.none) {
     return getLocalData();
   } else {
-    var url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
-    var response = await http.get(Uri.parse(url));
+    // var url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
+    // var response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(
+        'https://www.themealdb.com/api/json/v1/1/search.php?s=chicken'));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      var categoriesData = data['categories'] as List;
+
+      var categoriesData = data['meals'] as List;
+
+      // data['categories'] as List;
       List<Category> categories = categoriesData
           .map((category) => Category.fromJson(category))
           .toList();
@@ -32,23 +37,23 @@ List<Category> getLocalData() {
 }
 
 class Category {
-  final int idCategory;
-  final String strCategory;
-  final String strCategoryThumb;
-  final String strCategoryDescription;
+  final int idMeal;
+  final String strMeal;
+  final String strMealThumb;
+  final String strArea;
 
   Category(
-      {required this.idCategory,
-      required this.strCategory,
-      required this.strCategoryThumb,
-      required this.strCategoryDescription});
+      {required this.idMeal,
+      required this.strMeal,
+      required this.strMealThumb,
+      required this.strArea});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      idCategory: int.parse(json['idCategory']),
-      strCategory: json['strCategory'],
-      strCategoryThumb: json['strCategoryThumb'],
-      strCategoryDescription: json['strCategoryDescription'],
+      idMeal: int.parse(json['idMeal']),
+      strMeal: json['strMeal'],
+      strMealThumb: json['strMealThumb'],
+      strArea: json['strArea'],
     );
   }
 }
@@ -59,24 +64,24 @@ class CategoryAdapter extends TypeAdapter<Category> {
 
   @override
   Category read(BinaryReader reader) {
-    var idCategory = reader.readInt();
-    var strCategory = reader.readString();
-    var strCategoryThumb = reader.readString();
-    var strCategoryDescription = reader.readString();
+    var idMeal = reader.readInt();
+    var strMeal = reader.readString();
+    var strMealThumb = reader.readString();
+    var strArea = reader.readString();
 
     return Category(
-      idCategory: idCategory,
-      strCategory: strCategory,
-      strCategoryThumb: strCategoryThumb,
-      strCategoryDescription: strCategoryDescription,
+      idMeal: idMeal,
+      strMeal: strMeal,
+      strMealThumb: strMealThumb,
+      strArea: strArea,
     );
   }
 
   @override
   void write(BinaryWriter writer, Category obj) {
-    writer.writeInt(obj.idCategory);
-    writer.writeString(obj.strCategory);
-    writer.writeString(obj.strCategoryThumb);
-    writer.writeString(obj.strCategoryDescription);
+    writer.writeInt(obj.idMeal);
+    writer.writeString(obj.strMeal);
+    writer.writeString(obj.strMealThumb);
+    writer.writeString(obj.strArea);
   }
 }

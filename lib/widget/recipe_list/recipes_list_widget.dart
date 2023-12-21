@@ -13,6 +13,7 @@ class RecipesModelListWidget extends StatefulWidget {
 class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
   @override
   void initState() {
+    fetchData();
     super.initState();
   }
 
@@ -66,8 +67,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                           bottomLeft: Radius.circular(5),
                                         ),
                                         child: Image.network(
-                                          snapshot
-                                              .data![index].strCategoryThumb,
+                                          snapshot.data![index].strMealThumb,
                                           width: 149,
                                           height: 136,
                                           // fit: BoxFit.fitHeight,
@@ -80,14 +80,13 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                             direction: Axis.vertical,
                                             children: [
                                               Text(
-                                                (snapshot
-                                                    .data![index].strCategory),
+                                                (snapshot.data![index].strMeal),
                                                 style: const TextStyle(
                                                     fontSize: 22,
                                                     fontWeight: FontWeight.bold,
                                                     overflow:
                                                         TextOverflow.ellipsis),
-                                                maxLines: 2,
+                                                maxLines: 1,
                                               ),
                                             ]),
                                       ),
@@ -95,8 +94,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                         padding: const EdgeInsets.only(
                                             left: 165, top: 60),
                                         child: Text(
-                                          snapshot.data![index]
-                                              .strCategoryDescription,
+                                          snapshot.data![index].strArea,
                                           style: const TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -131,11 +129,15 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             onTap: () => Navigator.pushNamed(
-                                                context,
-                                                // context, goToRecipeInfo
+                                                    context,
+                                                    // context, goToRecipeInfo
 
-                                                MainNavigationRouteNames
-                                                    .recipeInfoWidget)),
+                                                    MainNavigationRouteNames
+                                                        .recipeInfoPage,
+                                                    arguments: {
+                                                      'mealId': snapshot
+                                                          .data![index].idMeal
+                                                    })),
                                       )
                                     ],
                                   ),

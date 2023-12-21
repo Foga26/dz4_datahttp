@@ -183,7 +183,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => MyApppp())),
-                                    child: Text('dasd'),
+                                    child: Text('TfliteModel'),
                                   ),
                                   TextButton(
                                       onPressed: () =>

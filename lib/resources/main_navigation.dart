@@ -21,16 +21,19 @@ class MainNavigation {
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
     '/recipes': (context) => const RecipesModelListWidget(),
-    '/recipeInfo': (context) => DetailInfoRecipeWidget(),
+    '/recipeInfo': (context) => DetailInfoRecipeWidget(
+          mealId: 'mealId',
+        ),
     // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),
   };
 
   Route<Object> onGenerateRoute(RouteSettings settings) {
+    final args = settings.arguments as Map<String, dynamic>;
     switch (settings.name) {
-      case MainNavigationRouteNames.recipeInfoWidget:
-        final arguments = settings.arguments;
-        final recipeid = arguments is int ? arguments : 0;
+      case MainNavigationRouteNames.recipeInfoPage:
+
+        // final recipeid = arguments is int ? arguments : 0;
         return PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (BuildContext context,
@@ -57,7 +60,9 @@ class MainNavigation {
           },
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
-            return RecipeInfoWidget(recipeid: recipeid);
+            return DetailInfoRecipeWidget(
+              mealId: args['mealId'].toString(),
+            );
           },
         );
       default:

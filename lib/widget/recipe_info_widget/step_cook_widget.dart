@@ -64,100 +64,105 @@ class _StepCookWidgetState extends State<StepCookWidget>
                               : const Color(0xffECECEC),
                         ),
                         child: Center(
-                          child: Row(children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Text(
-                                instructionNumber.toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 40,
-                                  color: ready
-                                      ? const Color(0xff2ECC71)
-                                      : const Color(0xffC2C2C2),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 38, top: 10, bottom: 10),
-                              child: SizedBox(
-                                width: 220,
-                                child: Center(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 24),
                                   child: Text(
-                                    instructionText,
+                                    instructionNumber.toString(),
                                     style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 40,
                                       color: ready
-                                          ? ColorApp.textStyleDarkGreen
-                                          : ColorApp.colorGrey,
-                                      fontSize: 12,
+                                          ? const Color(0xff2ECC71)
+                                          : const Color(0xffC2C2C2),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Column(
-                              children: [
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 33, left: 3),
-                                  child: AnimatedBuilder(
-                                    animation: _animation!,
-                                    builder: (context, child) {
-                                      return Transform.scale(
-                                        scale: _animation?.value,
-                                        child: SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: Checkbox(
-                                              tristate: false,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              side: BorderSide(
-                                                  width: 4,
-                                                  color: ready
-                                                      ? ColorApp
-                                                          .textColorDarkGreen
-                                                      : ColorApp.colorGrey),
-                                              value: widget.chekValues[index],
-                                              onChanged: ready
-                                                  ? (value) {
-                                                      setState(() {
-                                                        if (widget.chekValues[
-                                                            index] = value!) {
-                                                          _controller
-                                                              ?.forward();
-                                                        } else {
-                                                          _controller
-                                                              ?.reverse();
-                                                        }
-                                                      });
-
-                                                      // widget.chekValues[
-                                                      //     index] = value;
-                                                    }
-                                                  : null),
+                                  padding: const EdgeInsets.only(
+                                      left: 38, top: 10, bottom: 10),
+                                  child: SizedBox(
+                                    width: 220,
+                                    child: Center(
+                                      child: Text(
+                                        instructionText,
+                                        style: TextStyle(
+                                          color: ready
+                                              ? ColorApp.textStyleDarkGreen
+                                              : ColorApp.colorGrey,
+                                          fontSize: 12,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 5, top: 10),
-                                  child: Text(
-                                    '2',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: ready
-                                            ? ColorApp.textColorDarkGreen
-                                            : ColorApp.colorGrey),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ]),
+                                Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 33, right: 20),
+                                      child: AnimatedBuilder(
+                                        animation: _animation!,
+                                        builder: (context, child) {
+                                          return Transform.scale(
+                                            scale: _animation?.value,
+                                            child: SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Checkbox(
+                                                  tristate: false,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                  side: BorderSide(
+                                                      width: 4,
+                                                      color: ready
+                                                          ? ColorApp
+                                                              .textColorDarkGreen
+                                                          : ColorApp.colorGrey),
+                                                  value:
+                                                      widget.chekValues[index],
+                                                  onChanged: ready
+                                                      ? (value) {
+                                                          setState(() {
+                                                            if (widget.chekValues[
+                                                                    index] =
+                                                                value!) {
+                                                              _controller
+                                                                  ?.forward();
+                                                            } else {
+                                                              _controller
+                                                                  ?.reverse();
+                                                            }
+                                                          });
+
+                                                          // widget.chekValues[
+                                                          //     index] = value;
+                                                        }
+                                                      : null),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 5, top: 10),
+                                      child: Text(
+                                        '2',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: ready
+                                                ? ColorApp.textColorDarkGreen
+                                                : ColorApp.colorGrey),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ]),
                         ),
                       ),
                     ),

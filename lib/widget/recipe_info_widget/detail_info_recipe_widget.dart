@@ -12,7 +12,8 @@ import '../comment_widget.dart';
 import 'package:rive/rive.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
-  const DetailInfoRecipeWidget({super.key});
+  final String mealId;
+  const DetailInfoRecipeWidget({super.key, required this.mealId});
 
   @override
   State<DetailInfoRecipeWidget> createState() => _DetailInfoRecipeWidgetState();
@@ -22,7 +23,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   bool ingridientsHave = false;
 
   // Map<String, dynamic>? mealData;
-  Map<String, dynamic>? meals;
+  Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
 
@@ -32,24 +33,27 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     // Если есть подключение к Интернету
     if (connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile) {
-      String url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772';
-      var response = await http.get(Uri.parse(url));
-
+      // String url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772';
+      // var response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(
+          'https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        meals = data['meals'][0];
+
+        mealDetails = await data['meals'][0];
 
         // Сохранение данных из API в локальную базу данных
         final Box box = Hive.box('meals');
         await box.put(
           'data',
-          meals,
+          mealDetails,
         );
       }
     } else {
       // Если нет подключения к Интернету, использовать локальные данные
       var box = Hive.box('meals');
-      meals = Map<String, dynamic>.from(box.get('data', defaultValue: 'data'));
+      mealDetails =
+          Map<String, dynamic>.from(box.get('data', defaultValue: 'data'));
     }
 
     setState(() {});
@@ -80,17 +84,17 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     var isExpanded = Provider.of<Test>(context).isExpanded;
     var isTimerVisible = Provider.of<Test>(context).isTimerVisible;
     final strInstructions =
-        meals?['strInstructions'].toString() ?? ''.toString();
+        mealDetails?['strInstructions'].toString() ?? ''.toString();
     instructions = strInstructions.split("\r\n");
     chekboxValues = List<bool>.filled(instructions.length, false);
 
-    final test = StepCookWidget(
+    final stepCook = StepCookWidget(
       stepcookInfo: instructions,
       stepNumber: 0,
       chekValues: chekboxValues,
     );
     final properties = Text(
-      '${meals?['strMeasure1']}\n${meals?['strMeasure2']}\n${meals?['strMeasure3']}\n${meals?['strMeasure4']}\n${meals?['strMeasure5']}\n${meals?['strMeasure6']}\n${meals?['strMeasure7']}\n${meals?['strMeasure8']}\n${meals?['strMeasure9']}',
+      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}',
       style: const TextStyle(
           height: 2.1,
           color: Colors.grey,
@@ -99,7 +103,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     );
 
     final ingridients = Text(
-      '• ${meals?['strIngredient1']}\n• ${meals?['strIngredient2']}\n• ${meals?['strIngredient3']}\n• ${meals?['strIngredient4']}\n• ${meals?['strIngredient5']}\n• ${meals?['strIngredient6']}\n• ${meals?['strIngredient7']}\n• ${meals?['strIngredient8']}\n• ${meals?['strIngredient9']}',
+      '• ${mealDetails?['strIngredient1']}\n• ${mealDetails?['strIngredient2']}\n• ${mealDetails?['strIngredient3']}\n• ${mealDetails?['strIngredient4']}\n• ${mealDetails?['strIngredient5']}\n• ${mealDetails?['strIngredient6']}\n• ${mealDetails?['strIngredient7']}\n• ${mealDetails?['strIngredient8']}\n• ${mealDetails?['strIngredient9']}',
       style: const TextStyle(
         height: 1.9,
         fontSize: 14,
@@ -107,7 +111,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       ),
     );
 
-    if (meals == null) {
+    if (mealDetails!.isEmpty) {
       return const Scaffold(
           body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +126,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         ],
       ));
     }
-
     return ChangeNotifierProvider(
         create: (BuildContext context) {
           Test();
@@ -130,16 +133,17 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: PreferredSize(
-              preferredSize:
-                  isTimerVisible ? Size.fromHeight(120) : Size.fromHeight(75),
+              preferredSize: isTimerVisible
+                  ? const Size.fromHeight(120)
+                  : const Size.fromHeight(75),
               child: AppBar(
                 flexibleSpace: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
+                    const Padding(
+                      padding: EdgeInsets.only(
                         top: 60,
                       ),
-                      child: const Text(
+                      child: Text(
                         'Рецепт',
                         style: TextStyle(
                             color: ColorApp.textColorDarkGreen, fontSize: 23),
@@ -152,7 +156,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           child: Container(
                             height: isTimerVisible ? 50 : 0,
                             width: isTimerVisible ? double.infinity : 0,
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: isTimerVisible
                                   ? ColorApp.textColorGreen
@@ -217,15 +221,16 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           Padding(
                             padding: const EdgeInsets.only(top: 15, left: 17),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  meals?['strMeal'],
+                                  mealDetails?['strMeal'],
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 24.0),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: const EdgeInsets.only(right: 20),
                                   child: SizedBox(
                                     height: 45,
                                     width: 45,
@@ -236,7 +241,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                               size: 25,
                                               color: Colors.black,
                                             )
-                                          : RiveAnimation.asset(
+                                          : const RiveAnimation.asset(
                                               'assets/heart.riv'),
                                       onPressed: toggleFavorite,
                                       iconSize: 24.0,
@@ -271,7 +276,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                   child: Image.network(
-                                    meals?['strMealThumb'],
+                                    mealDetails?['strMealThumb'],
                                   ))),
                           const Padding(
                             padding: EdgeInsets.only(top: 10, left: 16),
@@ -288,7 +293,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               right: 25,
                             ),
                             child: Container(
-                              width: 395,
+                              width: double.maxFinite,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 3,
@@ -385,7 +390,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: Column(
-                                children: [test],
+                                children: [stepCook],
                               )),
                           Center(
                             child: Padding(
