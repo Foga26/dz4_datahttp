@@ -26,6 +26,84 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
+  List<String> properties = [];
+  List<String> ingredients = [];
+
+  /*
+-В начале функция buildVerticalWordWidgets принимает список строк strings в качестве аргумента и возвращает виджет типа Column.
+
+-Создается пустое множество wordWidgetsss, которое будет содержать уникальные слова, начинающиеся с заглавной буквы.
+
+-Затем происходит итерация по каждой строке string в списке strings.
+
+-Каждая строка разбивается на слова с помощью метода split(' '), и результат сохраняется в списке words.
+
+-Затем происходит итерация по каждому слову word в списке words.
+
+-Внутри итерации проверяется, не пустое ли слово (word.isNotEmpty) и начинается ли оно с заглавной буквы (word[0].toUpperCase() == word[0]).
+
+-Если это условие выполняется, то это слово добавляется в множество wordWidgetsss.
+
+-После окончания внешней итерации, на основе множества wordWidgetsss создается список виджетов wordWidgets.
+
+-Каждый элемент word в множестве wordWidgetsss преобразуется в виджет типа Text, обернутый в виджет типа Padding с заданными отступами.
+
+-Результатом этого преобразования является список виджетов wordWidgets, который содержит виджеты Text для каждого слова.
+
+-В конце функция возвращает виджет типа Column с дочерними виджетами из списка wordWidgets.
+  */
+  // Column ingridientsList(List<String> strings) {
+  //   Set<String> wordWidgetsss = {};
+  //   for (String string in ingredients) {
+  //     List<String> words = string.split(',');
+
+  //     for (String word in words) {
+  //       {
+  //         wordWidgetsss.add(word);
+  //       }
+  //     }
+  //   }
+  //   List<Widget> wordWidgets = wordWidgetsss
+  //       .map((word) => Padding(
+  //             padding: const EdgeInsets.only(top: 15),
+  //             child: Text(
+  //               word,
+  //               style: const TextStyle(
+  //                   height: 2.1,
+  //                   color: Colors.grey,
+  //                   fontSize: 13,
+  //                   fontWeight: FontWeight.w400),
+  //             ),
+  //           ))
+  //       .toList();
+  //   return Column(
+  //     children: wordWidgets,
+  //   );
+  // }
+
+  // // тоже самое что выше только пропорции
+  // Column propertiesList(List<String> properties) {
+  //   List<String> wordWidget = [];
+  //   for (String string in properties) {
+  //     wordWidget.add(string);
+  //   }
+  //   List<Widget> wordWidgets = wordWidget
+  //       .map((word) => Padding(
+  //             padding: const EdgeInsets.only(top: 15),
+  //             child: Text(
+  //               word,
+  //               style: const TextStyle(
+  //                   height: 2.1,
+  //                   color: Colors.grey,
+  //                   fontSize: 13,
+  //                   fontWeight: FontWeight.w400),
+  //             ),
+  //           ))
+  //       .toList();
+  //   return Column(
+  //     children: wordWidgets,
+  //   );
+  // }
 
   Future<void> loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -48,6 +126,22 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
           'data',
           mealDetails,
         );
+        mealDetails!.forEach((key, value) {
+          for (int i = 1; i <= 20; i++) {
+            {
+              ingredients.add(mealDetails!['strIngredient$i']);
+            }
+          }
+        });
+
+        mealDetails!.forEach((key, value) {
+          if (key.contains('strMeasure') && value != null)
+            for (int i = 1; i <= 20; i++) {
+              {
+                properties.add(mealDetails!['strMeasure$i']);
+              }
+            }
+        });
       }
     } else {
       // Если нет подключения к Интернету, использовать локальные данные
@@ -93,22 +187,22 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       stepNumber: 0,
       chekValues: chekboxValues,
     );
-    final properties = Text(
-      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}',
+
+    var ingridients = Text(
+      '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
       style: const TextStyle(
           height: 2.1,
           color: Colors.grey,
           fontSize: 13,
           fontWeight: FontWeight.w400),
     );
-
-    final ingridients = Text(
-      '• ${mealDetails?['strIngredient1']}\n• ${mealDetails?['strIngredient2']}\n• ${mealDetails?['strIngredient3']}\n• ${mealDetails?['strIngredient4']}\n• ${mealDetails?['strIngredient5']}\n• ${mealDetails?['strIngredient6']}\n• ${mealDetails?['strIngredient7']}\n• ${mealDetails?['strIngredient8']}\n• ${mealDetails?['strIngredient9']}',
+    var properties = Text(
+      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
       style: const TextStyle(
-        height: 1.9,
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
+          height: 2.1,
+          color: Colors.grey,
+          fontSize: 13,
+          fontWeight: FontWeight.w400),
     );
 
     if (mealDetails!.isEmpty) {
@@ -293,6 +387,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               right: 25,
                             ),
                             child: Container(
+                              height: 576,
                               width: double.maxFinite,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -310,32 +405,23 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 // height: 297,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                    top: 13,
+                                    top: 8,
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 8, right: 8),
+                                        right: 8, left: 8),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 15),
-                                          child: Column(
-                                            children: [
-                                              ingridients,
-                                            ],
-                                          ),
-                                        ),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 15),
+                                            child: ingridients),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
-                                          child: Column(
-                                            children: [
-                                              properties,
-                                            ],
-                                          ),
+                                          child: properties,
                                         ),
                                       ],
                                     ),
