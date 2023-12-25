@@ -20,9 +20,9 @@ class MainNavigation {
     MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => const RecipesModelListWidget(),
+    '/recipes': (context) => RecipesModelListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(
-          mealId: 'mealId',
+          mealId: 'id',
         ),
     // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),

@@ -69,7 +69,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                           bottomLeft: Radius.circular(5),
                                         ),
                                         child: Image.network(
-                                          snapshot.data![index].strMealThumb,
+                                          snapshot.data![index].photo,
                                           width: 149,
                                           height: 136,
                                           // fit: BoxFit.fitHeight,
@@ -82,7 +82,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                             direction: Axis.vertical,
                                             children: [
                                               Text(
-                                                (snapshot.data![index].strMeal),
+                                                (snapshot.data![index].name),
                                                 style: const TextStyle(
                                                     fontSize: 22,
                                                     fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                         padding: const EdgeInsets.only(
                                             left: 165, top: 60),
                                         child: Text(
-                                          snapshot.data![index].strArea,
+                                          '${snapshot.data![index].duration} минут',
                                           style: const TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                         child: SizedBox(
                                           height: 19,
                                           child: Text(
-                                            '${Random().nextInt(50) + 10} минут',
+                                            '${snapshot.data![index].duration} минут',
                                             style: TextStyle(
                                                 color: ColorApp.textColorGreen,
                                                 fontSize: 16),
@@ -137,8 +137,8 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
                                                     MainNavigationRouteNames
                                                         .recipeInfoPage,
                                                     arguments: {
-                                                      'mealId': snapshot
-                                                          .data![index].idMeal
+                                                      'id': snapshot
+                                                          .data![index].id
                                                     })),
                                       )
                                     ],

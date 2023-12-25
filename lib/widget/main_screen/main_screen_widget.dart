@@ -15,7 +15,7 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
   int _selectedTab = 0;
 
   static final List<Widget> _widgetOption = <Widget>[
-    const RecipesModelListWidget(),
+    RecipesModelListWidget(),
     const AuthWidget(),
   ];
 

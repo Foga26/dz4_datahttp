@@ -29,82 +29,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   List<String> properties = [];
   List<String> ingredients = [];
 
-  /*
--В начале функция buildVerticalWordWidgets принимает список строк strings в качестве аргумента и возвращает виджет типа Column.
-
--Создается пустое множество wordWidgetsss, которое будет содержать уникальные слова, начинающиеся с заглавной буквы.
-
--Затем происходит итерация по каждой строке string в списке strings.
-
--Каждая строка разбивается на слова с помощью метода split(' '), и результат сохраняется в списке words.
-
--Затем происходит итерация по каждому слову word в списке words.
-
--Внутри итерации проверяется, не пустое ли слово (word.isNotEmpty) и начинается ли оно с заглавной буквы (word[0].toUpperCase() == word[0]).
-
--Если это условие выполняется, то это слово добавляется в множество wordWidgetsss.
-
--После окончания внешней итерации, на основе множества wordWidgetsss создается список виджетов wordWidgets.
-
--Каждый элемент word в множестве wordWidgetsss преобразуется в виджет типа Text, обернутый в виджет типа Padding с заданными отступами.
-
--Результатом этого преобразования является список виджетов wordWidgets, который содержит виджеты Text для каждого слова.
-
--В конце функция возвращает виджет типа Column с дочерними виджетами из списка wordWidgets.
-  */
-  // Column ingridientsList(List<String> strings) {
-  //   Set<String> wordWidgetsss = {};
-  //   for (String string in ingredients) {
-  //     List<String> words = string.split(',');
-
-  //     for (String word in words) {
-  //       {
-  //         wordWidgetsss.add(word);
-  //       }
-  //     }
-  //   }
-  //   List<Widget> wordWidgets = wordWidgetsss
-  //       .map((word) => Padding(
-  //             padding: const EdgeInsets.only(top: 15),
-  //             child: Text(
-  //               word,
-  //               style: const TextStyle(
-  //                   height: 2.1,
-  //                   color: Colors.grey,
-  //                   fontSize: 13,
-  //                   fontWeight: FontWeight.w400),
-  //             ),
-  //           ))
-  //       .toList();
-  //   return Column(
-  //     children: wordWidgets,
-  //   );
-  // }
-
-  // // тоже самое что выше только пропорции
-  // Column propertiesList(List<String> properties) {
-  //   List<String> wordWidget = [];
-  //   for (String string in properties) {
-  //     wordWidget.add(string);
-  //   }
-  //   List<Widget> wordWidgets = wordWidget
-  //       .map((word) => Padding(
-  //             padding: const EdgeInsets.only(top: 15),
-  //             child: Text(
-  //               word,
-  //               style: const TextStyle(
-  //                   height: 2.1,
-  //                   color: Colors.grey,
-  //                   fontSize: 13,
-  //                   fontWeight: FontWeight.w400),
-  //             ),
-  //           ))
-  //       .toList();
-  //   return Column(
-  //     children: wordWidgets,
-  //   );
-  // }
-
   Future<void> loadData() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
 
@@ -126,22 +50,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
           'data',
           mealDetails,
         );
-        mealDetails!.forEach((key, value) {
-          for (int i = 1; i <= 20; i++) {
-            {
-              ingredients.add(mealDetails!['strIngredient$i']);
-            }
-          }
-        });
-
-        mealDetails!.forEach((key, value) {
-          if (key.contains('strMeasure') && value != null)
-            for (int i = 1; i <= 20; i++) {
-              {
-                properties.add(mealDetails!['strMeasure$i']);
-              }
-            }
-        });
       }
     } else {
       // Если нет подключения к Интернету, использовать локальные данные

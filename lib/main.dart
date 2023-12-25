@@ -11,12 +11,12 @@ void main() async {
   await Hive.initFlutter();
 
   // Регистрация адаптера Hive для модели данных
-  Hive.registerAdapter<Category>(CategoryAdapter());
+  Hive.registerAdapter<RecipeInfoList>(RecipeListInfoAdapter());
   WidgetsFlutterBinding.ensureInitialized();
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
 
   // Открытие Hive-коробки
-  await Hive.openBox<Category>('categories');
+  await Hive.openBox<RecipeInfoList>('recipe');
 
   await Hive.openBox('meals');
 
