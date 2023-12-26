@@ -57,6 +57,7 @@ class RecipesModelListWidget extends StatelessWidget {
                               ),
                               child: Image.network(
                                 model!.movies[index].photo,
+                                fit: BoxFit.fill,
                                 width: 149,
                                 height: 136,
                                 // fit: BoxFit.fitHeight,
