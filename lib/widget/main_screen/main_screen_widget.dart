@@ -1,7 +1,10 @@
 import 'package:dz_2/resources/custumicon.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/auth_widget.dart';
+import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
+import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 import '../../resources/app_color.dart';
 
@@ -14,11 +17,7 @@ class MainScreenwidget extends StatefulWidget {
 
 class _MainScreenwidgetState extends State<MainScreenwidget> {
   int _selectedTab = 0;
-
-  static final List<Widget> _widgetOption = <Widget>[
-    RecipesModelListWidget(),
-    const AuthWidget(),
-  ];
+  var model = MovieListModel();
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -30,12 +29,16 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
 
   @override
   void initState() {
-    MovieListModel().loadRecipeList();
     super.initState();
+    model.loadRecipeList();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOption = <Widget>[
+      NotifierProvider(model: model, child: RecipesModelListWidget()),
+      const AuthWidget(),
+    ];
     return Scaffold(
       body: SafeArea(
         child: _widgetOption[_selectedTab],

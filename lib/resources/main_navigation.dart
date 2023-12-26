@@ -24,12 +24,12 @@ class MainNavigation {
     MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => NotifierProvider(
-        model: MovieListModel(), child: RecipesModelListWidget()),
-    '/recipeInfo': (context) => DetailInfoRecipeWidget(mealId: 'id'
-        // RecipeInfoList.fromJson(json.encoder as Map<String, dynamic>)
-        //     .id
-        //     .toString(),
+    '/recipes': (context) => RecipesModelListWidget(),
+    '/recipeInfo': (context) => DetailInfoRecipeWidget(
+          mealId: 'id', name: 'name', photo: 'photo', duration: 'duration',
+          // RecipeInfoList.fromJson(json.encoder as Map<String, dynamic>)
+          //     .id
+          //     .toString(),
         ),
     // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),
@@ -68,7 +68,10 @@ class MainNavigation {
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return DetailInfoRecipeWidget(
-              mealId: args['mealId'].toString(),
+              mealId: args['id'],
+              name: 'name',
+              photo: 'photo',
+              duration: 'duration',
             );
           },
         );

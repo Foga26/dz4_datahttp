@@ -1,21 +1,33 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
+
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
-import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+
 import '../changenotif.dart';
 import '../comment_widget.dart';
-import 'package:rive/rive.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
   final String mealId;
-  const DetailInfoRecipeWidget({super.key, required this.mealId});
+  final String name;
+  final String photo;
+  final String duration;
+  const DetailInfoRecipeWidget({
+    Key? key,
+    required this.mealId,
+    required this.name,
+    required this.photo,
+    required this.duration,
+  }) : super(key: key);
 
   @override
   State<DetailInfoRecipeWidget> createState() => _DetailInfoRecipeWidgetState();
@@ -28,9 +40,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
-  List<String> properties = [];
-  List<String> ingredients = [];
-  var bbbb = <RecipeInfoList>[];
 
   // Future<void> loadData() async {
   //   var connectivityResult = await (Connectivity().checkConnectivity());
@@ -66,8 +75,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
 
   @override
   initState() {
-    fetchDataIngr();
-    fetchData();
     super.initState();
   }
 
@@ -99,38 +106,38 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       chekValues: chekboxValues,
     );
 
-    // var ingridients = Text(
-    //   '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
-    //   style: const TextStyle(
-    //       height: 2.1,
-    //       color: Colors.grey,
-    //       fontSize: 13,
-    //       fontWeight: FontWeight.w400),
-    // );
-    // var properties = Text(
-    //   '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
-    //   style: const TextStyle(
-    //       height: 2.1,
-    //       color: Colors.grey,
-    //       fontSize: 13,
-    //       fontWeight: FontWeight.w400),
-    // );
+    var ingridients = Text(
+      '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
+      style: const TextStyle(
+          height: 2.1,
+          color: Colors.grey,
+          fontSize: 13,
+          fontWeight: FontWeight.w400),
+    );
+    var properties = Text(
+      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
+      style: const TextStyle(
+          height: 2.1,
+          color: Colors.grey,
+          fontSize: 13,
+          fontWeight: FontWeight.w400),
+    );
 
-    // if (mealDetails!.isEmpty) {
-    //   return const Scaffold(
-    //       body: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       Text('Loading...'),
-    //       SizedBox(
-    //         height: 15,
-    //       ),
-    //       Center(
-    //         child: CircularProgressIndicator(),
-    //       ),
-    //     ],
-    //   ));
-    // }
+    if (widget.mealId!.isEmpty) {
+      return const Scaffold(
+          body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Loading...'),
+          SizedBox(
+            height: 15,
+          ),
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ));
+    }
     return ChangeNotifierProvider(
         create: (BuildContext context) {
           Test();
@@ -229,9 +236,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  RecipeInfoList.fromJson(
-                                          json.encoder as Map<String, dynamic>)
-                                      .name,
+                                  widget.name,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 24.0),
@@ -258,7 +263,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               ],
                             ),
                           ),
-                          const Row(
+                          Row(
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(top: 5.43, left: 17),
@@ -268,7 +273,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               Padding(
                                 padding: EdgeInsets.only(top: 4.41, left: 10),
                                 child: Text(
-                                  '45 минут',
+                                  '${widget.duration} минут',
                                   style: TextStyle(
                                       color: ColorApp.textColorGreen,
                                       fontSize: 16),
@@ -283,9 +288,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                   child: Image.network(
-                                    RecipeInfoList.fromJson(json.encoder
-                                            as Map<String, dynamic>)
-                                        .photo,
+                                    widget.photo,
                                   ))),
                           const Padding(
                             padding: EdgeInsets.only(top: 10, left: 16),
@@ -332,11 +335,11 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                         Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 15),
-                                            child: Text('fds')),
+                                            child: ingridients),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
-                                          child: Text('dsd'),
+                                          child: properties,
                                         ),
                                       ],
                                     ),
