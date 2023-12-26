@@ -1,5 +1,6 @@
 import 'package:dz_2/resources/custumicon.dart';
 import 'package:dz_2/widget/auth_widget.dart';
+import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:flutter/material.dart';
 import '../../resources/app_color.dart';
@@ -29,6 +30,7 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
 
   @override
   void initState() {
+    MovieListModel().loadRecipeList();
     super.initState();
   }
 

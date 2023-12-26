@@ -1,4 +1,7 @@
 import 'package:dz_2/resources/main_navigation.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/inherit_model.dart';
+import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:dz_2/widget/changenotif.dart';
@@ -17,7 +20,7 @@ void main() async {
 
   // Открытие Hive-коробки
   await Hive.openBox<RecipeInfoList>('recipe');
-
+  await Hive.openBox<RecipeInfoList>('recipeIngr');
   await Hive.openBox('meals');
 
   Hive.init(appDirectory.path);
@@ -34,7 +37,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => Test()),
+        ChangeNotifierProvider(
+          create: (context) => Test(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MovieListModel(),
+        ),
       ],
       child: MaterialApp(
         routes: mainNavigation.routes,

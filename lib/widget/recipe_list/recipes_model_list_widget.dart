@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,8 +12,6 @@ Future<List<RecipeInfoList>> fetchData() async {
   if (connectivityResult == ConnectivityResult.none) {
     return getLocalData();
   } else {
-    // var url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
-    // var response = await http.get(Uri.parse(url));
     final response =
         await http.get(Uri.parse('https://foodapi.dzolotov.tech/recipe'));
     if (response.statusCode == 200) {
@@ -32,28 +31,6 @@ Future<List<RecipeInfoList>> fetchData() async {
 
 List<RecipeInfoList> getLocalData() {
   return Hive.box<RecipeInfoList>('recipe').values.toList();
-}
-
-class RecipeInfoList {
-  final int id;
-  final String name;
-  final String photo;
-  final int duration;
-
-  RecipeInfoList(
-      {required this.id,
-      required this.name,
-      required this.photo,
-      required this.duration});
-
-  factory RecipeInfoList.fromJson(Map<String, dynamic> json) {
-    return RecipeInfoList(
-      id: json['id'],
-      name: json['name'],
-      photo: json['photo'],
-      duration: json['duration'],
-    );
-  }
 }
 
 class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
@@ -82,4 +59,35 @@ class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
     writer.writeString(obj.photo);
     writer.writeInt(obj.duration);
   }
+}
+
+Future<List<RecipeIngridient>> fetchDataIngr() async {
+  // Проверка подключения к Интернету
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult == ConnectivityResult.none) {
+    return getLocalDataIngr();
+  } else {
+    // var url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
+    // var response = await http.get(Uri.parse(url));
+    final response = await http
+        .get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+
+      // data['categories'] as List;
+      List<RecipeIngridient> recipeIngridient = data
+          .map((recipeinf) => RecipeIngridient.fromJson(recipeinf))
+          .toList();
+      Hive.box<RecipeIngridient>('recipeIngr').clear();
+      Hive.box<RecipeIngridient>('recipeIngr').addAll(recipeIngridient);
+      return recipeIngridient;
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
+}
+
+List<RecipeIngridient> getLocalDataIngr() {
+  return Hive.box<RecipeIngridient>('recipeIngr').values.toList();
 }

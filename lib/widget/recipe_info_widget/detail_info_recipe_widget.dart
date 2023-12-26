@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
+import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -28,44 +30,45 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   List<bool> chekboxValues = [];
   List<String> properties = [];
   List<String> ingredients = [];
+  var bbbb = <RecipeInfoList>[];
 
-  Future<void> loadData() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+  // Future<void> loadData() async {
+  //   var connectivityResult = await (Connectivity().checkConnectivity());
 
-    // Если есть подключение к Интернету
-    if (connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile) {
-      // String url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772';
-      // var response = await http.get(Uri.parse(url));
-      final response = await http.get(Uri.parse(
-          'https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+  //   // Если есть подключение к Интернету
+  //   if (connectivityResult == ConnectivityResult.wifi ||
+  //       connectivityResult == ConnectivityResult.mobile) {
+  //     // String url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772';
+  //     // var response = await http.get(Uri.parse(url));
+  //     final response = await http.get(Uri.parse(
+  //         'https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
 
-        mealDetails = await data['meals'][0];
+  //       mealDetails = await data['meals'][0];
 
-        // Сохранение данных из API в локальную базу данных
-        final Box box = Hive.box('meals');
-        await box.put(
-          'data',
-          mealDetails,
-        );
-      }
-    } else {
-      // Если нет подключения к Интернету, использовать локальные данные
-      var box = Hive.box('meals');
-      mealDetails =
-          Map<String, dynamic>.from(box.get('data', defaultValue: 'data'));
-    }
+  //       // Сохранение данных из API в локальную базу данных
+  //       final Box box = Hive.box('meals');
+  //       await box.put(
+  //         'data',
+  //         mealDetails,
+  //       );
+  //     }
+  //   } else {
+  //     // Если нет подключения к Интернету, использовать локальные данные
+  //     var box = Hive.box('meals');
+  //     mealDetails =
+  //         Map<String, dynamic>.from(box.get('data', defaultValue: 'data'));
+  //   }
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   @override
   initState() {
+    fetchDataIngr();
+    fetchData();
     super.initState();
-
-    loadData();
   }
 
   bool isFavorite = true;
@@ -96,38 +99,38 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       chekValues: chekboxValues,
     );
 
-    var ingridients = Text(
-      '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
-      style: const TextStyle(
-          height: 2.1,
-          color: Colors.grey,
-          fontSize: 13,
-          fontWeight: FontWeight.w400),
-    );
-    var properties = Text(
-      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
-      style: const TextStyle(
-          height: 2.1,
-          color: Colors.grey,
-          fontSize: 13,
-          fontWeight: FontWeight.w400),
-    );
+    // var ingridients = Text(
+    //   '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
+    //   style: const TextStyle(
+    //       height: 2.1,
+    //       color: Colors.grey,
+    //       fontSize: 13,
+    //       fontWeight: FontWeight.w400),
+    // );
+    // var properties = Text(
+    //   '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
+    //   style: const TextStyle(
+    //       height: 2.1,
+    //       color: Colors.grey,
+    //       fontSize: 13,
+    //       fontWeight: FontWeight.w400),
+    // );
 
-    if (mealDetails!.isEmpty) {
-      return const Scaffold(
-          body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Loading...'),
-          SizedBox(
-            height: 15,
-          ),
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      ));
-    }
+    // if (mealDetails!.isEmpty) {
+    //   return const Scaffold(
+    //       body: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       Text('Loading...'),
+    //       SizedBox(
+    //         height: 15,
+    //       ),
+    //       Center(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //     ],
+    //   ));
+    // }
     return ChangeNotifierProvider(
         create: (BuildContext context) {
           Test();
@@ -226,7 +229,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  mealDetails?['strMeal'],
+                                  RecipeInfoList.fromJson(
+                                          json.encoder as Map<String, dynamic>)
+                                      .name,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 24.0),
@@ -278,7 +283,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                   child: Image.network(
-                                    mealDetails?['strMealThumb'],
+                                    RecipeInfoList.fromJson(json.encoder
+                                            as Map<String, dynamic>)
+                                        .photo,
                                   ))),
                           const Padding(
                             padding: EdgeInsets.only(top: 10, left: 16),
@@ -325,11 +332,11 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                         Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 15),
-                                            child: ingridients),
+                                            child: Text('fds')),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
-                                          child: properties,
+                                          child: Text('dsd'),
                                         ),
                                       ],
                                     ),

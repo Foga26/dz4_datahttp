@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/model.dart';
 import 'package:flutter/material.dart';
 import '../widget/auth_widget.dart';
 import '../widget/inherit_model.dart';
@@ -20,9 +24,12 @@ class MainNavigation {
     MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => RecipesModelListWidget(),
-    '/recipeInfo': (context) => DetailInfoRecipeWidget(
-          mealId: 'id',
+    '/recipes': (context) => NotifierProvider(
+        model: MovieListModel(), child: RecipesModelListWidget()),
+    '/recipeInfo': (context) => DetailInfoRecipeWidget(mealId: 'id'
+        // RecipeInfoList.fromJson(json.encoder as Map<String, dynamic>)
+        //     .id
+        //     .toString(),
         ),
     // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),
