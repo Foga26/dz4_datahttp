@@ -17,7 +17,7 @@ class MainScreenwidget extends StatefulWidget {
 
 class _MainScreenwidgetState extends State<MainScreenwidget> {
   int _selectedTab = 0;
-  var model = MovieListModel();
+  var model = RecipesListModel();
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -31,15 +31,18 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
   void initState() {
     super.initState();
     model.loadRecipeList();
-    fetchMeasureUnit();
+    // fetchMeasureUnit();
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOption = <Widget>[
-      NotifierProvider(model: model, child: RecipesModelListWidget()),
+      NotifierProvider(model: model, child: RecipesListWidget()),
       const AuthWidget(),
     ];
+    if (model.recipeInfoList.isEmpty) {
+      CircularProgressIndicator();
+    }
     return Scaffold(
       body: SafeArea(
         child: _widgetOption[_selectedTab],

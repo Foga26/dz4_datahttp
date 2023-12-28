@@ -1,14 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:dz_2/resources/remote_ingredient.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
+
 import '../changenotif.dart';
 import '../comment_widget.dart';
 
@@ -17,6 +18,7 @@ class DetailInfoRecipeWidget extends StatefulWidget {
   final String name;
   final String photo;
   final String duration;
+  final List<String> testIngr;
 
   const DetailInfoRecipeWidget({
     Key? key,
@@ -24,6 +26,7 @@ class DetailInfoRecipeWidget extends StatefulWidget {
     required this.name,
     required this.photo,
     required this.duration,
+    required this.testIngr,
   }) : super(key: key);
 
   @override
@@ -37,6 +40,35 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
+
+  Column ingridientsListss(List<String> strings) {
+    List<String> wordWidgetsss = [];
+    for (String string in widget.testIngr) {
+      List<String> words = string.split(',');
+
+      for (String word in words) {
+        {
+          wordWidgetsss.add(word);
+        }
+      }
+    }
+    List<Widget> wordWidgets = wordWidgetsss
+        .map((word) => Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Text(
+                word,
+                style: const TextStyle(
+                    height: 2.1,
+                    color: Colors.grey,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400),
+              ),
+            ))
+        .toList();
+    return Column(
+      children: wordWidgets,
+    );
+  }
 
   // Future<void> loadData() async {
   //   var connectivityResult = await (Connectivity().checkConnectivity());
@@ -334,7 +366,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                             Padding(
                                                 padding: const EdgeInsets.only(
                                                     bottom: 15),
-                                                child: Text('sada')),
+                                                child: ingridientsListss(
+                                                    widget.testIngr)),
                                           ],
                                         ),
                                         Padding(

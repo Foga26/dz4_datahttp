@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
@@ -9,8 +10,8 @@ class Ingredient {
   final int id;
   final String name;
   final double caloriesForUnit;
-  @JsonKey(name: 'measureUnit')
-  final MeasureUnit measureUnit;
+  // @JsonKey(name: 'measureUnit')
+  final List<MeasureUnit> measureUnit;
   Ingredient({
     required this.id,
     required this.name,
@@ -45,10 +46,10 @@ class MeasureUnit {
 class RecipeIngridient {
   final int id;
   final int count;
-  @JsonKey(name: 'ingredient')
-  final Ingredient ingredient;
-  @JsonKey(name: 'recipe')
-  final RecipeInfoList recipe;
+  // @JsonKey(name: 'ingredient')
+  final List<Ingredient> ingredient;
+  // @JsonKey(name: 'recipe')
+  final List<RecipeInfoList> recipe;
   RecipeIngridient({
     required this.id,
     required this.count,

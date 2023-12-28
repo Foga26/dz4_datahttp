@@ -10,8 +10,9 @@ Ingredient _$IngredientFromJson(Map<String, dynamic> json) => Ingredient(
       id: json['id'] as int,
       name: json['name'] as String,
       caloriesForUnit: (json['caloriesForUnit'] as num).toDouble(),
-      measureUnit:
-          MeasureUnit.fromJson(json['measureUnit'] as Map<String, dynamic>),
+      measureUnit: (json['measureUnit'] as List<dynamic>)
+          .map((e) => MeasureUnit.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$IngredientToJson(Ingredient instance) =>
@@ -19,7 +20,7 @@ Map<String, dynamic> _$IngredientToJson(Ingredient instance) =>
       'id': instance.id,
       'name': instance.name,
       'caloriesForUnit': instance.caloriesForUnit,
-      'measureUnit': instance.measureUnit.toJson(),
+      'measureUnit': instance.measureUnit.map((e) => e.toJson()).toList(),
     };
 
 MeasureUnit _$MeasureUnitFromJson(Map<String, dynamic> json) => MeasureUnit(
@@ -41,17 +42,20 @@ RecipeIngridient _$RecipeIngridientFromJson(Map<String, dynamic> json) =>
     RecipeIngridient(
       id: json['id'] as int,
       count: json['count'] as int,
-      ingredient:
-          Ingredient.fromJson(json['ingredient'] as Map<String, dynamic>),
-      recipe: RecipeInfoList.fromJson(json['recipe'] as Map<String, dynamic>),
+      ingredient: (json['ingredient'] as List<dynamic>)
+          .map((e) => Ingredient.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      recipe: (json['recipe'] as List<dynamic>)
+          .map((e) => RecipeInfoList.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$RecipeIngridientToJson(RecipeIngridient instance) =>
     <String, dynamic>{
       'id': instance.id,
       'count': instance.count,
-      'ingredient': instance.ingredient.toJson(),
-      'recipe': instance.recipe.toJson(),
+      'ingredient': instance.ingredient.map((e) => e.toJson()).toList(),
+      'recipe': instance.recipe.map((e) => e.toJson()).toList(),
     };
 
 RecipeInfoList _$RecipeInfoListFromJson(Map<String, dynamic> json) =>

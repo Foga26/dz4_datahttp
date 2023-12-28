@@ -20,7 +20,7 @@ void main() async {
 
   // Открытие Hive-коробки
   await Hive.openBox<RecipeInfoList>('recipe');
-  // await Hive.openBox<RecipeInfoList>('measureunit');
+  await Hive.openBox<RecipeInfoList>('measureunit');
   await Hive.openBox('meals');
 
   Hive.init(appDirectory.path);
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           create: (context) => Test(),
         ),
         ChangeNotifierProvider(
-          create: (context) => MovieListModel(),
+          create: (context) => RecipesListModel(),
         ),
       ],
       child: MaterialApp(

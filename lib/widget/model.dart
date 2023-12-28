@@ -5,7 +5,7 @@ import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 
-class MovieListModel extends ChangeNotifier {
+class RecipesListModel extends ChangeNotifier {
   var recipeInfoList = <RecipeInfoList>[];
 
   Future<void> loadRecipeList() async {

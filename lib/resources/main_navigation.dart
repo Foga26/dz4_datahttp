@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dz_2/resources/remote_ingredient.dart';
-import 'package:dz_2/widget/model.dart';
+
 import 'package:flutter/material.dart';
 import '../widget/auth_widget.dart';
 import '../widget/inherit_model.dart';
@@ -24,9 +24,10 @@ class MainNavigation {
     MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
         model: MainScreenModel(), child: const MainScreenwidget())),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => RecipesModelListWidget(),
+    '/recipes': (context) => RecipesListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(
           mealId: 'id', name: 'name', photo: 'photo', duration: 'duration',
+          testIngr: ['count'],
           // RecipeInfoList.fromJson(json.encoder as Map<String, dynamic>)
           //     .id
           //     .toString(),
@@ -72,6 +73,7 @@ class MainNavigation {
               name: args['name'],
               photo: args['photo'],
               duration: args['duration'].toString(),
+              testIngr: [],
             );
           },
         );

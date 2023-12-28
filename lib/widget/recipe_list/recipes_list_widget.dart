@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:dz_2/resources/main_navigation.dart';
 import '../../resources/app_color.dart';
 
-class RecipesModelListWidget extends StatelessWidget {
-  RecipesModelListWidget({
+class RecipesListWidget extends StatelessWidget {
+  RecipesListWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var model = NotifierProvider.watch<MovieListModel>(context);
+    var model = NotifierProvider.watch<RecipesListModel>(context);
+    var modelIngr = NotifierProvider.watch<RecipeIngridientModel>(context)
+        ?.recipeIngridient;
 
     return Scaffold(
         backgroundColor: ColorApp.backGroundColor,
@@ -119,7 +121,7 @@ class RecipesModelListWidget extends StatelessWidget {
                                             'duration': model
                                                 .recipeInfoList[index].duration,
                                             'photo': model
-                                                .recipeInfoList[index].photo
+                                                .recipeInfoList[index].photo,
                                           })),
                             )
                           ],
