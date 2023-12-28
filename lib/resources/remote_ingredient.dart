@@ -6,10 +6,11 @@ part 'remote_ingredient.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Ingredient {
-  int id;
-  String name;
-  double caloriesForUnit;
-  List<MeasureUnit> measureUnit;
+  final int id;
+  final String name;
+  final double caloriesForUnit;
+  @JsonKey(name: 'measureUnit')
+  final MeasureUnit measureUnit;
   Ingredient({
     required this.id,
     required this.name,
@@ -24,10 +25,10 @@ class Ingredient {
 
 @JsonSerializable(explicitToJson: true)
 class MeasureUnit {
-  int id;
-  String one;
-  String few;
-  String many;
+  final int id;
+  final String one;
+  final String few;
+  final String many;
   MeasureUnit({
     required this.id,
     required this.one,
@@ -42,10 +43,12 @@ class MeasureUnit {
 
 @JsonSerializable(explicitToJson: true)
 class RecipeIngridient {
-  int id;
-  int count;
-  List<Ingredient> ingredient;
-  List<RecipeInfoList> recipe;
+  final int id;
+  final int count;
+  @JsonKey(name: 'ingredient')
+  final Ingredient ingredient;
+  @JsonKey(name: 'recipe')
+  final RecipeInfoList recipe;
   RecipeIngridient({
     required this.id,
     required this.count,

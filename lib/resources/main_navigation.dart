@@ -68,10 +68,10 @@ class MainNavigation {
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return DetailInfoRecipeWidget(
-              mealId: args['id'],
-              name: 'name',
-              photo: 'photo',
-              duration: 'duration',
+              mealId: args['id'].toString(),
+              name: args['name'],
+              photo: args['photo'],
+              duration: args['duration'].toString(),
             );
           },
         );

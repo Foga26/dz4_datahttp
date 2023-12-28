@@ -1,18 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
-
 import '../changenotif.dart';
 import '../comment_widget.dart';
 
@@ -21,6 +14,7 @@ class DetailInfoRecipeWidget extends StatefulWidget {
   final String name;
   final String photo;
   final String duration;
+
   const DetailInfoRecipeWidget({
     Key? key,
     required this.mealId,
@@ -123,7 +117,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
           fontWeight: FontWeight.w400),
     );
 
-    if (widget.mealId!.isEmpty) {
+    if (widget.mealId.isEmpty) {
       return const Scaffold(
           body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

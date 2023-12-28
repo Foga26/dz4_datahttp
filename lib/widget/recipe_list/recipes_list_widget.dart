@@ -1,12 +1,7 @@
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dz_2/resources/main_navigation.dart';
-
-import 'package:provider/provider.dart';
-
 import '../../resources/app_color.dart';
 
 class RecipesModelListWidget extends StatelessWidget {
@@ -30,7 +25,7 @@ class RecipesModelListWidget extends StatelessWidget {
                   separatorBuilder: (BuildContext context, int index) {
                     return const Padding(padding: EdgeInsets.only(top: 24));
                   },
-                  itemCount: model?.movies.length ?? 0,
+                  itemCount: model?.recipeInfoList.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     {
                       return Container(
@@ -56,7 +51,7 @@ class RecipesModelListWidget extends StatelessWidget {
                                 bottomLeft: Radius.circular(5),
                               ),
                               child: Image.network(
-                                model!.movies[index].photo,
+                                model!.recipeInfoList[index].photo,
                                 fit: BoxFit.fill,
                                 width: 149,
                                 height: 136,
@@ -68,7 +63,7 @@ class RecipesModelListWidget extends StatelessWidget {
                                   const EdgeInsets.only(left: 165, top: 30),
                               child: Flex(direction: Axis.vertical, children: [
                                 Text(
-                                  (model.movies[index].name),
+                                  (model.recipeInfoList[index].name),
                                   style: const TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
@@ -81,7 +76,7 @@ class RecipesModelListWidget extends StatelessWidget {
                               padding:
                                   const EdgeInsets.only(left: 165, top: 60),
                               child: Text(
-                                '${model.movies[index].duration} минут',
+                                '${model.recipeInfoList[index].duration} минут',
                                 style: const TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
@@ -101,7 +96,7 @@ class RecipesModelListWidget extends StatelessWidget {
                               child: SizedBox(
                                 height: 19,
                                 child: Text(
-                                  '${model.movies[index].duration} минут',
+                                  '${model.recipeInfoList[index].duration} минут',
                                   style: TextStyle(
                                       color: ColorApp.textColorGreen,
                                       fontSize: 16),
@@ -112,22 +107,20 @@ class RecipesModelListWidget extends StatelessWidget {
                               color: Colors.transparent,
                               child: InkWell(
                                   borderRadius: BorderRadius.circular(10),
-                                  onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailInfoRecipeWidget(
-                                            duration: model
-                                                .movies[index].duration
-                                                .toString(),
-                                            mealId: model.movies[index].id
-                                                .toString(),
-                                            name: "${model.movies[index].name}",
-                                            photo:
-                                                '${model.movies[index].photo}',
-                                          ),
-                                        ),
-                                      )),
+                                  onTap: () => Navigator.pushNamed(
+                                          context,
+                                          MainNavigationRouteNames
+                                              .recipeInfoPage,
+                                          arguments: {
+                                            'mealId':
+                                                model.recipeInfoList[index].id,
+                                            'name': model
+                                                .recipeInfoList[index].name,
+                                            'duration': model
+                                                .recipeInfoList[index].duration,
+                                            'photo': model
+                                                .recipeInfoList[index].photo
+                                          })),
                             )
                           ],
                         ),
