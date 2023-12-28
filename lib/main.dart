@@ -20,7 +20,7 @@ void main() async {
 
   // Открытие Hive-коробки
   await Hive.openBox<RecipeInfoList>('recipe');
-  await Hive.openBox<RecipeInfoList>('recipeingr');
+  // await Hive.openBox<RecipeInfoList>('measureunit');
   await Hive.openBox('meals');
 
   Hive.init(appDirectory.path);

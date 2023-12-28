@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:dz_2/resources/remote_ingredient.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
@@ -304,9 +307,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 3,
-                                    color: ingridientsHave
-                                        ? ColorApp.textColorGreen
-                                        : ColorApp.colorGrey,
+                                    // color: ingridientsHave
+                                    //     ? ColorApp.textColorGreen
+                                    //     : ColorApp.colorGrey,
                                   ),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
@@ -326,14 +329,18 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 15),
-                                            child: ingridients),
+                                        Column(
+                                          children: [
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 15),
+                                                child: Text('sada')),
+                                          ],
+                                        ),
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
-                                          child: properties,
+                                          child: Text(''),
                                         ),
                                       ],
                                     ),

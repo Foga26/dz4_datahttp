@@ -101,32 +101,30 @@ List<RecipeIngridient> getLocalDataIngr() {
   return Hive.box<RecipeIngridient>('recipeingr').values.toList();
 }
 
+Future<List<MeasureUnit>> fetchMeasureUnit() async {
+  // Проверка подключения к Интернету
+  var connectivityResult = await (Connectivity().checkConnectivity());
 
-// Future<List <MeasureUnit>> fetchMeasureUnit() async {
-//   // Проверка подключения к Интернету
-//   var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    return getLocalDataMeasureUnit();
+  } else {
+    final response =
+        await http.get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
 
-//   if (connectivityResult == ConnectivityResult.none) {
-//     return getLocalDataMeasureUnit();
-//   } else {
-//     final response = await http
-//         .get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
-//     if (response.statusCode == 200) {
-//       var data = json.decode(response.body) as List;
+      // data['categories'] as List;
+      List<MeasureUnit> result =
+          data.map((recipeingr) => MeasureUnit.fromJson(recipeingr)).toList();
+      Hive.box<MeasureUnit>('measureunit').clear();
+      Hive.box<MeasureUnit>('measureunit').addAll(result);
+      return result;
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
+}
 
-//       // data['categories'] as List;
-//       List<MeasureUnit> result = data
-//           .map((recipeingr) => MeasureUnit.fromJson(recipeingr))
-//           .toList();
-//       Hive.box<RecipeIngridient>('measureunit').clear();
-//       Hive.box<RecipeIngridient>('measureunit').addAll(result as Iterable<RecipeIngridient>);
-//       return result;
-//     } else {
-//       throw Exception('Failed to load categories');
-//     }
-//   }
-// }
-
-// List <MeasureUnit> getLocalDataMeasureUnit() {
-//   return Hive.box<MeasureUnit>('measureunit').values.toList();
-// }
+List<MeasureUnit> getLocalDataMeasureUnit() {
+  return Hive.box<MeasureUnit>('measureunit').values.toList();
+}
