@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -21,16 +22,16 @@ class RecipesListModel extends ChangeNotifier {
   }
 }
 
-class RecipeIngridientModel extends ChangeNotifier {
-  var recipeIngridient = <RecipeIngridient>[];
+// class RecipeIngridientModel extends ChangeNotifier {
+//   List<RecipeIngredientr> recipeIngredients = [];
 
-  Future<void> loadRecipeIngridient() async {
-    final responserecipeIngridient = await fetchRecipeIngredients();
-    recipeIngridient.addAll(responserecipeIngridient);
+//   Future<void> loadRecipeIngridient() async {
+//     final responserecipeIngridient = await fetchRecipeIngredients();
+//     recipeIngredients.addAll(responserecipeIngridient);
 
-    notifyListeners();
-  }
-}
+//     notifyListeners();
+//   }
+// }
 
 class MeasureUnitModel extends ChangeNotifier {
   var measureUnitList = <MeasureUnit>[];

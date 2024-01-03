@@ -46,10 +46,10 @@ class MeasureUnit {
 class RecipeIngridient {
   final int id;
   final int count;
-  // @JsonKey(name: 'ingredient')
-  final List<Ingredient> ingredient;
-  // @JsonKey(name: 'recipe')
-  final List<RecipeInfoList> recipe;
+  @JsonKey(name: 'ingredient')
+  final Ingredient ingredient;
+  @JsonKey(name: 'recipe')
+  final RecipeInfoList recipe;
   RecipeIngridient({
     required this.id,
     required this.count,

@@ -1,19 +1,34 @@
+import 'dart:convert';
+
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:dz_2/resources/main_navigation.dart';
+import 'package:hive/hive.dart';
 import '../../resources/app_color.dart';
+import 'package:http/http.dart' as http;
 
-class RecipesListWidget extends StatelessWidget {
+class RecipesListWidget extends StatefulWidget {
   RecipesListWidget({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<RecipesListWidget> createState() => _RecipesListWidgetState();
+}
+
+class _RecipesListWidgetState extends State<RecipesListWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var model = NotifierProvider.watch<RecipesListModel>(context);
-    var modelIngr = NotifierProvider.watch<RecipeIngridientModel>(context)
-        ?.recipeIngridient;
+    // var modelIngr = NotifierProvider.watch<RecipeIngridientModel>(context)
+    //     ?.recipeIngridient;
 
     return Scaffold(
         backgroundColor: ColorApp.backGroundColor,
@@ -114,7 +129,7 @@ class RecipesListWidget extends StatelessWidget {
                                           MainNavigationRouteNames
                                               .recipeInfoPage,
                                           arguments: {
-                                            'mealId':
+                                            'id':
                                                 model.recipeInfoList[index].id,
                                             'name': model
                                                 .recipeInfoList[index].name,
