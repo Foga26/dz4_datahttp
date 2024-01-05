@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RecipeIngredientr {
@@ -47,7 +48,7 @@ class Ingredientr {
   final int id;
   final String name;
   final double caloriesForUnit;
-  final int measureUnit;
+  final MeasureUnit measureUnit;
 
   Ingredientr({
     required this.id,

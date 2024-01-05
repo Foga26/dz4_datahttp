@@ -2,15 +2,15 @@
 import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 
@@ -43,13 +43,144 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   List<String> instructions = [];
   List<bool> chekboxValues = [];
   List<dynamic> ingredientr = [];
-  var test;
+  List<dynamic> measureUnitInfo = [];
+  List<RecipeStep> recipeStep = [];
   @override
   initState() {
-    fetchRecipeIngredients(int.parse(widget.id));
     fetchIngredients();
+    fetchRecipeIngredients(int.parse(widget.id));
+    fetchIngredientsMeasureUnit();
+    fetchRecipeStepLinks(int.parse(widget.id));
+    fetchRecipeStep();
     // getLocalDataIngr();
     super.initState();
+  }
+
+  List<RecipeStepLink> recipeStepLink = [];
+  List<RecipeStepLink> getLocalDataRecipeStepLink() {
+    return Hive.box<RecipeStepLink>('recipeStepLinkInfo').values.toList();
+  }
+
+  List<RecipeStep> getLocalDataRecipeStep() {
+    return Hive.box<RecipeStep>('recipeStepInfo').values.toList();
+  }
+
+  Future<List<RecipeStepLink>> fetchRecipeStepLinks(
+    ricepiIdd,
+  ) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataRecipeStepLink();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step_link';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // await fetchIngredients();
+        await fetchRecipeStep();
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
+        recipeStepLink = data
+            .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+            .map((e) => RecipeStepLink(
+                id: e['id'],
+                number: e['number'],
+                recipeId: e['recipe']['id'],
+                stepId: RecipeStep(
+                    id: e['step']['id'],
+                    name: recipeStep
+                        .firstWhere((step) => step.id == e['step']['id'])
+                        .name,
+                    duration: 0)))
+            .toList();
+        setState(() {});
+
+        // Добавление данных в базу Hive
+        Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
+        Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
+        // recipeStepLinkBox.clear();
+        // recipeStepLinkBox.addAll(recipeStepLink);
+        return recipeStepLink;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
+  }
+
+  Future<List<RecipeStep>> fetchRecipeStep() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataRecipeStep();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // await fetchIngredients();
+
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
+        recipeStep = data
+            // .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+            .map((e) => RecipeStep(
+                  id: e['id'],
+                  name: e['name'],
+                  duration: e['duration'],
+                ))
+            .toList();
+        setState(() {});
+
+        // Добавление данных в базу Hive
+
+        Hive.box<RecipeStep>('recipeStepInfo').clear();
+        Hive.box<RecipeStep>('recipeStepInfo').addAll(recipeStep);
+        // recipeStepBox.clear();
+        // recipeStepBox.addAll(recipeStep);
+        return recipeStep;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
+  }
+
+  Future<List<dynamic>> fetchIngredientsMeasureUnit() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    // final Box<Ingredientr> recipeIngredientBox =
+    //     Hive.box<Ingredientr>('recipeIngredientInfo');
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   return getLocalDataIngr();
+    // } else {
+    String apiUrl = 'https://foodapi.dzolotov.tech/measure_unit';
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+
+      measureUnitInfo = data
+          // .where((recipeId) => recipeId['recipe']['id'])
+          .map((e) => MeasureUnit(
+                id: e['id'],
+                one: e['one'],
+                few: e['few'],
+                many: e['many'],
+              ))
+          .toList();
+      setState(() {});
+
+      // Добавление данных в базу Hive
+      // recipeIngredientBox.clear();
+      // recipeIngredientBox.addAll(ingredientr);
+      return measureUnitInfo;
+    } else {
+      throw Exception('Failed to fetch recipe ingredients');
+    }
   }
 
   List<RecipeIngredientr> getLocalDataIngr() {
@@ -67,23 +198,15 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       return getLocalDataIngr();
     } else {
       String apiUrl = 'https://foodapi.dzolotov.tech/recipe_ingredient';
-      String apiIngredientUrl = 'https://foodapi.dzolotov.tech/ingredient';
-      final responseIngr = await http.get(Uri.parse(apiIngredientUrl));
+
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        List<dynamic> dataIngr = jsonDecode(responseIngr.body);
-        // final ingredientr = dataIngr.firstWhere((i) => i['id'] == e['ingredient']['id']);
-        // final ingredientr = dataIngr
-        //     // .where((recipeId) => recipeId['recipe']['id'])
-        //     .map((e) => Ingredientr(
-        //           id: e['id'],
-        //           name: e['name'],
-        //           caloriesForUnit: e['caloriesForUnit'],
-        //           measureUnit: e['measureUnit']['id'],
-        //         ))
-        //     .toList();
+        await fetchIngredients();
 
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
         recipeIngredients = data
             .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
             .map((e) => RecipeIngredientr(
@@ -96,7 +219,18 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               ingredient.id == e['ingredient']['id'])
                           .name,
                       caloriesForUnit: 0,
-                      measureUnit: 0),
+                      measureUnit:
+                          //  ingredientr
+                          //     .firstWhere(
+                          //         (ingr) => ingr.id == e['measureUnit']['id'])
+                          //     .one
+                          MeasureUnit(
+                              id: 1
+                              // e['ingredient']['id']['measureUnit']['id']
+                              ,
+                              one: '1',
+                              few: '2',
+                              many: '3')),
                   recipeId: e['recipe']['id'],
                 ))
             .toList();
@@ -121,17 +255,39 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     // } else {
     String apiUrl = 'https://foodapi.dzolotov.tech/ingredient';
     final response = await http.get(Uri.parse(apiUrl));
+    // await fetchRecipeIngredients(widget.id);
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-
+      // var tost = recipeIngredients
+      //     .firstWhere(
+      //         (element) => element.ingredientId == ingredientr[int.parse('id')])
+      //     .ingredientId;
       ingredientr = data
           // .where((recipeId) => recipeId['recipe']['id'])
           .map((e) => Ingredientr(
                 id: e['id'],
                 name: e['name'],
                 caloriesForUnit: e['caloriesForUnit'],
-                measureUnit: e['measureUnit']['id'],
+                measureUnit: MeasureUnit(
+                  id: e['measureUnit']['id'],
+                  one: 'one',
+                  few: 'few',
+                  //  measureUnitInfo
+                  //     .firstWhere(
+                  //         (element) => element.id == e['measureUnit']['id'])
+                  //     .one,
+                  // few:'few',
+                  //  measureUnitInfo
+                  //     .firstWhere(
+                  //         (element) => element.id == e['measureUnit']['id'])
+                  //     .few,
+                  many: 'many',
+                  // measureUnitInfo
+                  //     .firstWhere(
+                  //         (element) => element.id == e['measureUnit']['id'])
+                  //     .many
+                ),
               ))
           .toList();
       setState(() {});
@@ -158,20 +314,22 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     });
   }
 
+//Нужно отфильтровать теперь класс Ingridientr выбрать из него только граммы которые относятся к ид и прибавить к количеству
+
   @override
   Widget build(BuildContext context) {
     var isExpanded = Provider.of<Test>(context).isExpanded;
     var isTimerVisible = Provider.of<Test>(context).isTimerVisible;
-    final strInstructions =
-        mealDetails?['strInstructions'].toString() ?? ''.toString();
-    instructions = strInstructions.split("\r\n");
-    chekboxValues = List<bool>.filled(instructions.length, false);
+    // final strInstructions =
+    //     mealDetails?['strInstructions'].toString() ?? ''.toString();
+    // instructions = strInstructions.split("\r\n");
+    chekboxValues = List<bool>.filled(recipeStepLink.length, false);
 
     // var testik = RecipeIngredientr(
     //     id: 0, count: 0, ingredientId: 0, recipeId: widget.mealId);
 
     final stepCook = StepCookWidget(
-      stepcookInfo: instructions,
+      stepcookInfo: recipeStepLink,
       stepNumber: 0,
       chekValues: chekboxValues,
     );
@@ -380,9 +538,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 3,
-                                    // color: ingridientsHave
-                                    //     ? ColorApp.textColorGreen
-                                    //     : ColorApp.colorGrey,
+                                    color: ingridientsHave
+                                        ? ColorApp.textColorGreen
+                                        : ColorApp.colorGrey,
                                   ),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
@@ -451,7 +609,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                                               index];
 
                                                       return Text(
-                                                          ' ${ingredient.count}',
+                                                          ' ${ingredient.count} ' +
+                                                              'dfsd',
                                                           style: const TextStyle(
                                                               height: 2.1,
                                                               color:
@@ -513,9 +672,22 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           ),
                           Padding(
                               padding: const EdgeInsets.only(top: 20),
-                              child: Column(
-                                children: [stepCook],
-                              )),
+                              child: stepCook
+                              // ListView.builder(
+                              //     physics: NeverScrollableScrollPhysics(),
+                              //     shrinkWrap: true,
+                              //     itemCount: recipeStepLink.length,
+                              //     itemBuilder:
+                              //         (BuildContext context, int index) {
+                              //       return Text(
+                              //           '${recipeStepLink[index].stepId.name}',
+                              //           style: const TextStyle(
+                              //               height: 2.1,
+                              //               color: Colors.grey,
+                              //               fontSize: 13,
+                              //               fontWeight: FontWeight.w400));
+                              //     })
+                              ),
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15),

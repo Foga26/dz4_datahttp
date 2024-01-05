@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
-
 part 'remote_ingredient.g.dart';
 
 @JsonSerializable(explicitToJson: true)
