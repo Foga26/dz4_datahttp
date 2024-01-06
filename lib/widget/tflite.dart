@@ -122,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+//d
 class ObjectDetectionPainter extends CustomPainter {
   final List<dynamic> objects;
   final double imageWidth;

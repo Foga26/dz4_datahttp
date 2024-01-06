@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'dart:convert';
 
+import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:dz_2/resources/app_color.dart';
 
 import '../changenotif.dart';
@@ -8,14 +13,14 @@ import '../changenotif.dart';
 // ignore: must_be_immutable
 class StepCookWidget extends StatefulWidget {
   var stepcookInfo = [];
-  var stepNumber = 0;
+  var duration = [];
   var chekValues =
       []; // список значений false по количеству строк в списке stepcookInfo
 
   StepCookWidget({
     Key? key,
     required this.stepcookInfo,
-    required this.stepNumber,
+    required this.duration,
     required this.chekValues,
   }) : super(key: key);
 
@@ -50,7 +55,7 @@ class _StepCookWidgetState extends State<StepCookWidget>
           itemCount: widget.stepcookInfo.length,
           itemBuilder: (BuildContext context, int index) {
             var instructionNumber = index + 1;
-            final instructionText = widget.stepcookInfo[index];
+            final instructionText = widget.stepcookInfo[index].stepId.name;
             return Padding(
                 padding: const EdgeInsets.only(top: 24, left: 15, right: 15),
                 child: Column(
@@ -150,9 +155,9 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 5, top: 10),
+                                          top: 10, right: 10),
                                       child: Text(
-                                        '2',
+                                        '${widget.stepcookInfo[index].stepId.duration} мин',
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: ready
