@@ -11,6 +11,7 @@ import 'package:dz_2/resources/resources.dart';
 
 import '../resources/app_color.dart';
 
+//s
 var date = [DateTime.now().day, DateTime.now().month, DateTime.now().year]
     .map((e) => e.toString());
 
