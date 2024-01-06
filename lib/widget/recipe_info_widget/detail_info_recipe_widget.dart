@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -43,8 +44,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   List<String> instructions = [];
   List<bool> chekboxValues = [];
   List<dynamic> ingredientr = [];
-  List<dynamic> measureUnitInfo = [];
+  List<MeasureUnit> measureUnitInfo = [];
   List<RecipeStep> recipeStep = [];
+
   @override
   initState() {
     fetchIngredients();
@@ -52,7 +54,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     fetchIngredientsMeasureUnit();
     fetchRecipeStepLinks(int.parse(widget.id));
     fetchRecipeStep();
-    // getLocalDataIngr();
+    // MeasureUnitModel().loadMeasureUnit();
+    getLocalDataIngr();
     super.initState();
   }
 
@@ -77,7 +80,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
 
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
-        // await fetchIngredients();
+        await fetchIngredients();
         await fetchRecipeStep();
         List<dynamic> data = jsonDecode(response.body);
         // var bb = measureUnit
@@ -112,6 +115,10 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     }
   }
 
+  List<MeasureUnit> getLocalDataMeasureUnit() {
+    return Hive.box<MeasureUnit>('measureunit').values.toList();
+  }
+
   Future<List<RecipeStep>> fetchRecipeStep() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
@@ -123,7 +130,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
 
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
-        // await fetchIngredients();
+        await fetchIngredients();
 
         List<dynamic> data = jsonDecode(response.body);
         // var bb = measureUnit
@@ -152,7 +159,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     }
   }
 
-  Future<List<dynamic>> fetchIngredientsMeasureUnit() async {
+  Future<List<MeasureUnit>> fetchIngredientsMeasureUnit() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     // final Box<Ingredientr> recipeIngredientBox =
     //     Hive.box<Ingredientr>('recipeIngredientInfo');
@@ -191,6 +198,44 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         .toList();
   }
 
+  var string = [
+    {"id": 1, "one": "штука", "few": "штуки", "many": "штук"},
+    {"id": 2, "one": "грамм", "few": "грамма", "many": "граммов"},
+    {"id": 3, "one": "банка", "few": "банки", "many": "банок"},
+    {"id": 4, "one": "коробка", "few": "коробки", "many": "коробок"},
+    {
+      "id": 5,
+      "one": "чайная ложка",
+      "few": "чайных ложки",
+      "many": "чайных ложек"
+    },
+    {
+      "id": 6,
+      "one": "столовая ложка",
+      "few": "столовых ложки",
+      "many": "столовых ложек"
+    },
+    {"id": 7, "one": "миллилитр", "few": "миллилитра", "many": "миллилитров"},
+    {"id": 8, "one": "по вкусу", "few": "по вкусу", "many": "по вкусу"},
+    {"id": 9, "one": "зубчик", "few": "зубчика", "many": "зубчиков"},
+    {"id": 10, "one": "головка", "few": "головки", "many": "головок"},
+    {"id": 11, "one": "щепотка", "few": "щепотки", "many": "щепоток"},
+    {"id": 12, "one": "килограмм", "few": "килограмма", "many": "килограммов"}
+  ];
+
+  String getUnit(int id, int quantity, List<Map<String, dynamic>> units) {
+    for (var unit in units.where((element) => element['id'] == id)) {
+      if (quantity == 1) {
+        return unit['one'];
+      } else if (quantity >= 2 && quantity <= 4) {
+        return unit['few'];
+      } else {
+        return unit['many'];
+      }
+    }
+    return '';
+  }
+
   List<RecipeIngredientr> recipeIngredients = [];
   Future<List<RecipeIngredientr>> fetchRecipeIngredients(
     ricepiIdd,
@@ -223,16 +268,17 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               ingredient.id == e['ingredient']['id'])
                           .name,
                       caloriesForUnit: 0,
-                      measureUnit:
-                          MeasureUnit(id: 1, one: '1', few: '2', many: '3')),
+                      measureUnit: MeasureUnit(
+                          id: e['ingredient']['id'],
+                          one: 'one',
+                          few: 'few',
+                          many: 'many')),
                   recipeId: e['recipe']['id'],
                 ))
             .toList();
-        setState(() {
-          recipeIngredientBox.clear();
-          recipeIngredientBox.addAll(recipeIngredients);
-        });
-
+        setState(() {});
+        recipeIngredientBox.clear();
+        recipeIngredientBox.addAll(recipeIngredients);
         // Добавление данных в базу Hive
 
         return recipeIngredients;
@@ -249,6 +295,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     // if (connectivityResult == ConnectivityResult.none) {
     //   return getLocalDataIngr();
     // }
+    // fetchRecipeIngredients(
+    //   widget.id,
+    // );
     String apiUrl = 'https://foodapi.dzolotov.tech/ingredient';
     final response = await http.get(Uri.parse(apiUrl));
     // await fetchRecipeIngredients(widget.id);
@@ -269,7 +318,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                 ),
               ))
           .toList();
-      setState(() {});
+      // setState(() {});
 
       // Добавление данных в базу Hive
       // recipeIngredientBox.clear();
@@ -508,16 +557,14 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 // height: 297,
                                 child: Padding(
                                   padding:
-                                      const EdgeInsets.only(right: 8, left: 8),
+                                      const EdgeInsets.only(right: 10, left: 8),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
                                           child: SizedBox(
-                                              width: 280,
+                                              width: 200,
                                               child: widget.name.isEmpty
                                                   ? Center(
                                                       child:
@@ -544,10 +591,11 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                                                         .w400));
                                                       }))),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 15),
+                                        padding: const EdgeInsets.only(
+                                          bottom: 15,
+                                        ),
                                         child: SizedBox(
-                                            width: 50,
+                                            width: 135,
                                             child: widget.name.isEmpty
                                                 ? Center(
                                                     child:
@@ -567,7 +615,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
 
                                                       return Text(
                                                           ' ${ingredient.count} ' +
-                                                              'dfsd',
+                                                              '${getUnit(ingredientr[index].measureUnit.id, ingredient.count, string)}',
                                                           style: const TextStyle(
                                                               height: 2.1,
                                                               color:

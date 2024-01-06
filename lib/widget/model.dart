@@ -33,18 +33,19 @@ class RecipesListModel extends ChangeNotifier {
 //   }
 // }
 
-class MeasureUnitModel extends ChangeNotifier {
-  var measureUnitList = <MeasureUnit>[];
+// class MeasureUnitModel extends ChangeNotifier {
+//   var measureUnitList = <MeasureUnit>[];
 
-  Future<void> loadRecipeList() async {
-    final measureResponce = await fetchMeasureUnit();
-    measureUnitList.addAll(measureResponce);
-    notifyListeners();
-  }
+//   Future<void> loadMeasureUnit() async {
+//     final measureResponce = await fetchMeasureUnit();
+//     measureUnitList.addAll(measureResponce);
+//     notifyListeners();
+//   }
+// }
 
   // void onMovieTap(BuildContext context, int index) {
   //   final id = measureUnitList[index].id;
   //   Navigator.of(context)
   //       .pushNamed(MainNavigationRouteNames.recipeInfoPage, arguments: id);
   // }
-}
+

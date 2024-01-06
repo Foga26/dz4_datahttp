@@ -62,95 +62,30 @@ class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
   }
 }
 
-// Future<RecipeIngridient> fetchDataIngridient() async {
-//   final response = await http
-//       .get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
-//   if (response.statusCode == 200) {
-//     final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
-//     // return jsonData.map((item) => RecipeIngridient.fromJson(item)).toList();
-//   } else {
-//     throw Exception('Failed to load ingredients');
-//   }
-// }
-
-// Future<List<RecipeIngridient>> fetchRecipeIngredients() async {
+// Future<List<MeasureUnit>> fetchMeasureUnit() async {
 //   // Проверка подключения к Интернету
 //   var connectivityResult = await (Connectivity().checkConnectivity());
 
 //   if (connectivityResult == ConnectivityResult.none) {
-//     return getLocalDataIngr();
+//     return getLocalDataMeasureUnit();
 //   } else {
-//     final response = await http
-//         .get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
+//     final response =
+//         await http.get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
 //     if (response.statusCode == 200) {
 //       var data = json.decode(response.body) as List;
 
 //       // data['categories'] as List;
-//       List<RecipeIngridient> recipeIngridient = data
-//           .map((recipeingr) => RecipeIngridient.fromJson(recipeingr))
-//           .toList();
-//       Hive.box<RecipeIngridient>('recipeingr').clear();
-//       Hive.box<RecipeIngridient>('recipeingr').addAll(recipeIngridient);
-//       return recipeIngridient;
+//       List<MeasureUnit> result =
+//           data.map((recipeingr) => MeasureUnit.fromJson(recipeingr)).toList();
+//       Hive.box<MeasureUnit>('measureunit').clear();
+//       Hive.box<MeasureUnit>('measureunit').addAll(result);
+//       return result;
 //     } else {
 //       throw Exception('Failed to load categories');
 //     }
 //   }
 // }
-//  List<RecipeIngredientr> recipeIngredients = [];
-//  final Box<RecipeIngredientr> recipeIngredientBox =
-//       Hive.box<RecipeIngredientr>('recipeIngredient');
-//  Future<void> fetchRecipeIngredients() async {
-//     final response = await http.get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
-//     if (response.statusCode == 200) {
-//       List<dynamic> data = jsonDecode(response.body);
-//       recipeIngredients = data
-//           .map((e) => RecipeIngredientr(
-//                 id: e['id'],
-//                 count: e['count'],
-//                 ingredientId: e['ingredient']['id'],
-//                 recipeId: e['recipe']['id'],
-//               ))
-//           .toList();
 
-//       // Добавление данных в базу Hive
-//       recipeIngredientBox.clear();
-//       recipeIngredientBox.addAll(recipeIngredients);
-
-//       setState(() {});
-//     } else {
-//       throw Exception('Failed to fetch recipe ingredients');
-//     }
-//   }
-
-// List<RecipeIngridient> getLocalDataIngr() {
-//   return Hive.box<RecipeIngridient>('recipeingr').values.toList();
+// List<MeasureUnit> getLocalDataMeasureUnit() {
+//   return Hive.box<MeasureUnit>('measureunit').values.toList();
 // }
-
-Future<List<MeasureUnit>> fetchMeasureUnit() async {
-  // Проверка подключения к Интернету
-  var connectivityResult = await (Connectivity().checkConnectivity());
-
-  if (connectivityResult == ConnectivityResult.none) {
-    return getLocalDataMeasureUnit();
-  } else {
-    final response =
-        await http.get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body) as List;
-
-      // data['categories'] as List;
-      List<MeasureUnit> result =
-          data.map((recipeingr) => MeasureUnit.fromJson(recipeingr)).toList();
-      Hive.box<MeasureUnit>('measureunit').clear();
-      Hive.box<MeasureUnit>('measureunit').addAll(result);
-      return result;
-    } else {
-      throw Exception('Failed to load categories');
-    }
-  }
-}
-
-List<MeasureUnit> getLocalDataMeasureUnit() {
-  return Hive.box<MeasureUnit>('measureunit').values.toList();
-}

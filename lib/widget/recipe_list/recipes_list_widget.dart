@@ -1,28 +1,13 @@
-import 'dart:convert';
-
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:dz_2/resources/main_navigation.dart';
-import 'package:hive/hive.dart';
 import '../../resources/app_color.dart';
-import 'package:http/http.dart' as http;
 
-class RecipesListWidget extends StatefulWidget {
+class RecipesListWidget extends StatelessWidget {
   RecipesListWidget({
     Key? key,
   }) : super(key: key);
-
-  @override
-  State<RecipesListWidget> createState() => _RecipesListWidgetState();
-}
-
-class _RecipesListWidgetState extends State<RecipesListWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
