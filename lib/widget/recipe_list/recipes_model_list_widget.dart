@@ -1,87 +1,156 @@
 import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Category>> fetchData() async {
+Future<List<RecipeInfoList>> fetchData() async {
   // Проверка подключения к Интернету
   var connectivityResult = await (Connectivity().checkConnectivity());
 
   if (connectivityResult == ConnectivityResult.none) {
     return getLocalData();
   } else {
-    // var url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
-    // var response = await http.get(Uri.parse(url));
-    final response = await http.get(Uri.parse(
-        'https://www.themealdb.com/api/json/v1/1/search.php?s=chicken'));
+    final response =
+        await http.get(Uri.parse('https://foodapi.dzolotov.tech/recipe'));
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-
-      var categoriesData = data['meals'] as List;
+      var data = json.decode(response.body) as List;
 
       // data['categories'] as List;
-      List<Category> categories = categoriesData
-          .map((category) => Category.fromJson(category))
-          .toList();
-      Hive.box<Category>('categories').addAll(categories);
-      return categories;
+      List<RecipeInfoList> recipeInfoList =
+          data.map((recipeinf) => RecipeInfoList.fromJson(recipeinf)).toList();
+      Hive.box<RecipeInfoList>('recipe').clear();
+      Hive.box<RecipeInfoList>('recipe').addAll(recipeInfoList);
+      return recipeInfoList;
     } else {
       throw Exception('Failed to load categories');
     }
   }
 }
 
-List<Category> getLocalData() {
-  return Hive.box<Category>('categories').values.toList();
+List<RecipeInfoList> getLocalData() {
+  return Hive.box<RecipeInfoList>('recipe').values.toList();
 }
 
-class Category {
-  final int idMeal;
-  final String strMeal;
-  final String strMealThumb;
-  final String strArea;
-
-  Category(
-      {required this.idMeal,
-      required this.strMeal,
-      required this.strMealThumb,
-      required this.strArea});
-
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      idMeal: int.parse(json['idMeal']),
-      strMeal: json['strMeal'],
-      strMealThumb: json['strMealThumb'],
-      strArea: json['strArea'],
-    );
-  }
-}
-
-class CategoryAdapter extends TypeAdapter<Category> {
+class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
   @override
   final typeId = 0;
 
   @override
-  Category read(BinaryReader reader) {
-    var idMeal = reader.readInt();
-    var strMeal = reader.readString();
-    var strMealThumb = reader.readString();
-    var strArea = reader.readString();
+  RecipeInfoList read(BinaryReader reader) {
+    var id = reader.readInt();
+    var name = reader.readString();
+    var photo = reader.readString();
+    var duration = reader.readInt();
 
-    return Category(
-      idMeal: idMeal,
-      strMeal: strMeal,
-      strMealThumb: strMealThumb,
-      strArea: strArea,
+    return RecipeInfoList(
+      id: id,
+      name: name,
+      photo: photo,
+      duration: duration,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Category obj) {
-    writer.writeInt(obj.idMeal);
-    writer.writeString(obj.strMeal);
-    writer.writeString(obj.strMealThumb);
-    writer.writeString(obj.strArea);
+  void write(BinaryWriter writer, RecipeInfoList obj) {
+    writer.writeInt(obj.id);
+    writer.writeString(obj.name);
+    writer.writeString(obj.photo);
+    writer.writeInt(obj.duration);
   }
+}
+
+// Future<RecipeIngridient> fetchDataIngridient() async {
+//   final response = await http
+//       .get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
+//   if (response.statusCode == 200) {
+//     final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+//     // return jsonData.map((item) => RecipeIngridient.fromJson(item)).toList();
+//   } else {
+//     throw Exception('Failed to load ingredients');
+//   }
+// }
+
+// Future<List<RecipeIngridient>> fetchRecipeIngredients() async {
+//   // Проверка подключения к Интернету
+//   var connectivityResult = await (Connectivity().checkConnectivity());
+
+//   if (connectivityResult == ConnectivityResult.none) {
+//     return getLocalDataIngr();
+//   } else {
+//     final response = await http
+//         .get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
+//     if (response.statusCode == 200) {
+//       var data = json.decode(response.body) as List;
+
+//       // data['categories'] as List;
+//       List<RecipeIngridient> recipeIngridient = data
+//           .map((recipeingr) => RecipeIngridient.fromJson(recipeingr))
+//           .toList();
+//       Hive.box<RecipeIngridient>('recipeingr').clear();
+//       Hive.box<RecipeIngridient>('recipeingr').addAll(recipeIngridient);
+//       return recipeIngridient;
+//     } else {
+//       throw Exception('Failed to load categories');
+//     }
+//   }
+// }
+//  List<RecipeIngredientr> recipeIngredients = [];
+//  final Box<RecipeIngredientr> recipeIngredientBox =
+//       Hive.box<RecipeIngredientr>('recipeIngredient');
+//  Future<void> fetchRecipeIngredients() async {
+//     final response = await http.get(Uri.parse('https://foodapi.dzolotov.tech/recipe_ingredient'));
+//     if (response.statusCode == 200) {
+//       List<dynamic> data = jsonDecode(response.body);
+//       recipeIngredients = data
+//           .map((e) => RecipeIngredientr(
+//                 id: e['id'],
+//                 count: e['count'],
+//                 ingredientId: e['ingredient']['id'],
+//                 recipeId: e['recipe']['id'],
+//               ))
+//           .toList();
+
+//       // Добавление данных в базу Hive
+//       recipeIngredientBox.clear();
+//       recipeIngredientBox.addAll(recipeIngredients);
+
+//       setState(() {});
+//     } else {
+//       throw Exception('Failed to fetch recipe ingredients');
+//     }
+//   }
+
+// List<RecipeIngridient> getLocalDataIngr() {
+//   return Hive.box<RecipeIngridient>('recipeingr').values.toList();
+// }
+
+Future<List<MeasureUnit>> fetchMeasureUnit() async {
+  // Проверка подключения к Интернету
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult == ConnectivityResult.none) {
+    return getLocalDataMeasureUnit();
+  } else {
+    final response =
+        await http.get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body) as List;
+
+      // data['categories'] as List;
+      List<MeasureUnit> result =
+          data.map((recipeingr) => MeasureUnit.fromJson(recipeingr)).toList();
+      Hive.box<MeasureUnit>('measureunit').clear();
+      Hive.box<MeasureUnit>('measureunit').addAll(result);
+      return result;
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
+}
+
+List<MeasureUnit> getLocalDataMeasureUnit() {
+  return Hive.box<MeasureUnit>('measureunit').values.toList();
 }

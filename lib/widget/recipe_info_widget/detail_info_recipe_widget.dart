@@ -1,19 +1,35 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
+
 import '../changenotif.dart';
 import '../comment_widget.dart';
-import 'package:rive/rive.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
-  final String mealId;
-  const DetailInfoRecipeWidget({super.key, required this.mealId});
+  final String id;
+  final String name;
+  final String photo;
+  final String duration;
+
+  DetailInfoRecipeWidget({
+    Key? key,
+    required this.id,
+    required this.name,
+    required this.photo,
+    required this.duration,
+  }) : super(key: key);
 
   @override
   State<DetailInfoRecipeWidget> createState() => _DetailInfoRecipeWidgetState();
@@ -26,138 +42,242 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
-  List<String> properties = [];
-  List<String> ingredients = [];
-
-  /*
--В начале функция buildVerticalWordWidgets принимает список строк strings в качестве аргумента и возвращает виджет типа Column.
-
--Создается пустое множество wordWidgetsss, которое будет содержать уникальные слова, начинающиеся с заглавной буквы.
-
--Затем происходит итерация по каждой строке string в списке strings.
-
--Каждая строка разбивается на слова с помощью метода split(' '), и результат сохраняется в списке words.
-
--Затем происходит итерация по каждому слову word в списке words.
-
--Внутри итерации проверяется, не пустое ли слово (word.isNotEmpty) и начинается ли оно с заглавной буквы (word[0].toUpperCase() == word[0]).
-
--Если это условие выполняется, то это слово добавляется в множество wordWidgetsss.
-
--После окончания внешней итерации, на основе множества wordWidgetsss создается список виджетов wordWidgets.
-
--Каждый элемент word в множестве wordWidgetsss преобразуется в виджет типа Text, обернутый в виджет типа Padding с заданными отступами.
-
--Результатом этого преобразования является список виджетов wordWidgets, который содержит виджеты Text для каждого слова.
-
--В конце функция возвращает виджет типа Column с дочерними виджетами из списка wordWidgets.
-  */
-  // Column ingridientsList(List<String> strings) {
-  //   Set<String> wordWidgetsss = {};
-  //   for (String string in ingredients) {
-  //     List<String> words = string.split(',');
-
-  //     for (String word in words) {
-  //       {
-  //         wordWidgetsss.add(word);
-  //       }
-  //     }
-  //   }
-  //   List<Widget> wordWidgets = wordWidgetsss
-  //       .map((word) => Padding(
-  //             padding: const EdgeInsets.only(top: 15),
-  //             child: Text(
-  //               word,
-  //               style: const TextStyle(
-  //                   height: 2.1,
-  //                   color: Colors.grey,
-  //                   fontSize: 13,
-  //                   fontWeight: FontWeight.w400),
-  //             ),
-  //           ))
-  //       .toList();
-  //   return Column(
-  //     children: wordWidgets,
-  //   );
-  // }
-
-  // // тоже самое что выше только пропорции
-  // Column propertiesList(List<String> properties) {
-  //   List<String> wordWidget = [];
-  //   for (String string in properties) {
-  //     wordWidget.add(string);
-  //   }
-  //   List<Widget> wordWidgets = wordWidget
-  //       .map((word) => Padding(
-  //             padding: const EdgeInsets.only(top: 15),
-  //             child: Text(
-  //               word,
-  //               style: const TextStyle(
-  //                   height: 2.1,
-  //                   color: Colors.grey,
-  //                   fontSize: 13,
-  //                   fontWeight: FontWeight.w400),
-  //             ),
-  //           ))
-  //       .toList();
-  //   return Column(
-  //     children: wordWidgets,
-  //   );
-  // }
-
-  Future<void> loadData() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    // Если есть подключение к Интернету
-    if (connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile) {
-      // String url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772';
-      // var response = await http.get(Uri.parse(url));
-      final response = await http.get(Uri.parse(
-          'https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        mealDetails = await data['meals'][0];
-
-        // Сохранение данных из API в локальную базу данных
-        final Box box = Hive.box('meals');
-        await box.put(
-          'data',
-          mealDetails,
-        );
-        mealDetails!.forEach((key, value) {
-          for (int i = 1; i <= 20; i++) {
-            {
-              ingredients.add(mealDetails!['strIngredient$i']);
-            }
-          }
-        });
-
-        mealDetails!.forEach((key, value) {
-          if (key.contains('strMeasure') && value != null)
-            for (int i = 1; i <= 20; i++) {
-              {
-                properties.add(mealDetails!['strMeasure$i']);
-              }
-            }
-        });
-      }
-    } else {
-      // Если нет подключения к Интернету, использовать локальные данные
-      var box = Hive.box('meals');
-      mealDetails =
-          Map<String, dynamic>.from(box.get('data', defaultValue: 'data'));
-    }
-
-    setState(() {});
-  }
-
+  List<dynamic> ingredientr = [];
+  List<dynamic> measureUnitInfo = [];
+  List<RecipeStep> recipeStep = [];
   @override
   initState() {
+    fetchIngredients();
+    fetchRecipeIngredients(int.parse(widget.id));
+    fetchIngredientsMeasureUnit();
+    fetchRecipeStepLinks(int.parse(widget.id));
+    fetchRecipeStep();
+    // getLocalDataIngr();
     super.initState();
+  }
 
-    loadData();
+  List<RecipeStepLink> recipeStepLink = [];
+  List<RecipeStepLink> getLocalDataRecipeStepLink() {
+    return Hive.box<RecipeStepLink>('recipeStepLinkInfo').values.toList();
+  }
+
+  List<RecipeStep> getLocalDataRecipeStep() {
+    return Hive.box<RecipeStep>('recipeStepInfo').values.toList();
+  }
+
+  Future<List<RecipeStepLink>> fetchRecipeStepLinks(
+    ricepiIdd,
+  ) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataRecipeStepLink();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step_link';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // await fetchIngredients();
+        await fetchRecipeStep();
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
+        recipeStepLink = data
+            .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+            .map((e) => RecipeStepLink(
+                id: e['id'],
+                number: e['number'],
+                recipeId: e['recipe']['id'],
+                stepId: RecipeStep(
+                    id: e['step']['id'],
+                    name: recipeStep
+                        .firstWhere((step) => step.id == e['step']['id'])
+                        .name,
+                    duration: recipeStep
+                        .firstWhere((step) => step.id == e['step']['id'])
+                        .duration)))
+            .toList();
+        setState(() {});
+
+        // Добавление данных в базу Hive
+        Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
+        Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
+        // recipeStepLinkBox.clear();
+        // recipeStepLinkBox.addAll(recipeStepLink);
+        return recipeStepLink;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
+  }
+
+  Future<List<RecipeStep>> fetchRecipeStep() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
+
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataRecipeStep();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // await fetchIngredients();
+
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
+        recipeStep = data
+            // .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+            .map((e) => RecipeStep(
+                  id: e['id'],
+                  name: e['name'],
+                  duration: e['duration'],
+                ))
+            .toList();
+        setState(() {});
+
+        // Добавление данных в базу Hive
+
+        Hive.box<RecipeStep>('recipeStepInfo').clear();
+        Hive.box<RecipeStep>('recipeStepInfo').addAll(recipeStep);
+        // recipeStepBox.clear();
+        // recipeStepBox.addAll(recipeStep);
+        return recipeStep;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
+  }
+
+  Future<List<dynamic>> fetchIngredientsMeasureUnit() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    // final Box<Ingredientr> recipeIngredientBox =
+    //     Hive.box<Ingredientr>('recipeIngredientInfo');
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   return getLocalDataIngr();
+    // } else {
+    String apiUrl = 'https://foodapi.dzolotov.tech/measure_unit';
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+
+      measureUnitInfo = data
+          // .where((recipeId) => recipeId['recipe']['id'])
+          .map((e) => MeasureUnit(
+                id: e['id'],
+                one: e['one'],
+                few: e['few'],
+                many: e['many'],
+              ))
+          .toList();
+      setState(() {});
+
+      // Добавление данных в базу Hive
+      // recipeIngredientBox.clear();
+      // recipeIngredientBox.addAll(ingredientr);
+      return measureUnitInfo;
+    } else {
+      throw Exception('Failed to fetch recipe ingredients');
+    }
+  }
+
+  List<RecipeIngredientr> getLocalDataIngr() {
+    return Hive.box<RecipeIngredientr>('recipeIngredientInfoDetail')
+        .values
+        .toList();
+  }
+
+  List<RecipeIngredientr> recipeIngredients = [];
+  Future<List<RecipeIngredientr>> fetchRecipeIngredients(
+    ricepiIdd,
+  ) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    final Box<RecipeIngredientr> recipeIngredientBox =
+        Hive.box<RecipeIngredientr>('recipeIngredientInfoDetail');
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataIngr();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_ingredient';
+
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        await fetchIngredients();
+
+        List<dynamic> data = jsonDecode(response.body);
+        // var bb = measureUnit
+        //     .firstWhere((element) => element.id == element.measureUnit.id)
+        //     .id;
+        recipeIngredients = data
+            .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+            .map((e) => RecipeIngredientr(
+                  id: e['id'],
+                  count: e['count'],
+                  ingredientId: Ingredientr(
+                      id: e['ingredient']['id'],
+                      name: ingredientr
+                          .firstWhere((ingredient) =>
+                              ingredient.id == e['ingredient']['id'])
+                          .name,
+                      caloriesForUnit: 0,
+                      measureUnit:
+                          MeasureUnit(id: 1, one: '1', few: '2', many: '3')),
+                  recipeId: e['recipe']['id'],
+                ))
+            .toList();
+        setState(() {
+          recipeIngredientBox.clear();
+          recipeIngredientBox.addAll(recipeIngredients);
+        });
+
+        // Добавление данных в базу Hive
+
+        return recipeIngredients;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
+  }
+
+  Future<List<dynamic>> fetchIngredients() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    // final Box<Ingredientr> recipeIngredientBox =
+    //     Hive.box<Ingredientr>('recipeIngredientInfo');
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   return getLocalDataIngr();
+    // }
+    String apiUrl = 'https://foodapi.dzolotov.tech/ingredient';
+    final response = await http.get(Uri.parse(apiUrl));
+    // await fetchRecipeIngredients(widget.id);
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+
+      ingredientr = data
+          .map((e) => Ingredientr(
+                id: e['id'],
+                name: e['name'],
+                caloriesForUnit: e['caloriesForUnit'],
+                measureUnit: MeasureUnit(
+                  id: e['measureUnit']['id'],
+                  one: 'one',
+                  few: 'few',
+                  many: 'many',
+                ),
+              ))
+          .toList();
+      setState(() {});
+
+      // Добавление данных в базу Hive
+      // recipeIngredientBox.clear();
+      // recipeIngredientBox.addAll(ingredientr);
+      return ingredientr;
+    } else {
+      throw Exception('Failed to fetch recipe ingredients');
+    }
   }
 
   bool isFavorite = true;
@@ -173,39 +293,22 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     });
   }
 
+//Нужно отфильтровать теперь класс Ingridientr выбрать из него только граммы которые относятся к ид и прибавить к количеству
+
   @override
   Widget build(BuildContext context) {
     var isExpanded = Provider.of<Test>(context).isExpanded;
     var isTimerVisible = Provider.of<Test>(context).isTimerVisible;
-    final strInstructions =
-        mealDetails?['strInstructions'].toString() ?? ''.toString();
-    instructions = strInstructions.split("\r\n");
-    chekboxValues = List<bool>.filled(instructions.length, false);
+
+    chekboxValues = List<bool>.filled(recipeStepLink.length, false);
 
     final stepCook = StepCookWidget(
-      stepcookInfo: instructions,
-      stepNumber: 0,
+      stepcookInfo: recipeStepLink,
+      duration: recipeStepLink,
       chekValues: chekboxValues,
     );
 
-    var ingridients = Text(
-      '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
-      style: const TextStyle(
-          height: 2.1,
-          color: Colors.grey,
-          fontSize: 13,
-          fontWeight: FontWeight.w400),
-    );
-    var properties = Text(
-      '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
-      style: const TextStyle(
-          height: 2.1,
-          color: Colors.grey,
-          fontSize: 13,
-          fontWeight: FontWeight.w400),
-    );
-
-    if (mealDetails!.isEmpty) {
+    if (widget.name.isEmpty) {
       return const Scaffold(
           body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +336,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
               child: AppBar(
                 flexibleSpace: Column(
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(
                         top: 60,
                       ),
@@ -271,7 +374,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 80),
                                     child: Text(
-                                      '38:59',
+                                      '${widget.duration}',
                                       style: TextStyle(
                                         color: isTimerVisible
                                             ? Colors.white
@@ -318,7 +421,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  mealDetails?['strMeal'],
+                                  widget.name,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 24.0),
@@ -345,7 +448,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               ],
                             ),
                           ),
-                          const Row(
+                          Row(
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(top: 5.43, left: 17),
@@ -355,7 +458,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               Padding(
                                 padding: EdgeInsets.only(top: 4.41, left: 10),
                                 child: Text(
-                                  '45 минут',
+                                  '${widget.duration} минут',
                                   style: TextStyle(
                                       color: ColorApp.textColorGreen,
                                       fontSize: 16),
@@ -370,7 +473,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                   child: Image.network(
-                                    mealDetails?['strMealThumb'],
+                                    widget.photo,
                                   ))),
                           const Padding(
                             padding: EdgeInsets.only(top: 10, left: 16),
@@ -387,7 +490,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               right: 25,
                             ),
                             child: Container(
-                              height: 576,
+                              // height: 400,
                               width: double.maxFinite,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -401,30 +504,81 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   shape: BoxShape.rectangle,
                                   color: Colors.transparent),
                               child: SizedBox(
-                                width: 379,
+                                width: double.infinity,
                                 // height: 297,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 8,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 8, left: 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 15),
-                                            child: ingridients),
-                                        Padding(
+                                  padding:
+                                      const EdgeInsets.only(right: 8, left: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
                                           padding:
                                               const EdgeInsets.only(bottom: 15),
-                                          child: properties,
-                                        ),
-                                      ],
-                                    ),
+                                          child: SizedBox(
+                                              width: 280,
+                                              child: widget.name.isEmpty
+                                                  ? Center(
+                                                      child:
+                                                          CircularProgressIndicator())
+                                                  : ListView.builder(
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemCount:
+                                                          recipeIngredients
+                                                              .length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        return Text(
+                                                            ' ${recipeIngredients[index].ingredientId.name}',
+                                                            style: const TextStyle(
+                                                                height: 2.1,
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400));
+                                                      }))),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 15),
+                                        child: SizedBox(
+                                            width: 50,
+                                            child: widget.name.isEmpty
+                                                ? Center(
+                                                    child:
+                                                        CircularProgressIndicator())
+                                                : ListView.builder(
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount: recipeIngredients
+                                                        .length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      final ingredient =
+                                                          recipeIngredients[
+                                                              index];
+
+                                                      return Text(
+                                                          ' ${ingredient.count} ' +
+                                                              'dfsd',
+                                                          style: const TextStyle(
+                                                              height: 2.1,
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 13,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400));
+                                                    })),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -475,9 +629,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           ),
                           Padding(
                               padding: const EdgeInsets.only(top: 20),
-                              child: Column(
-                                children: [stepCook],
-                              )),
+                              child: stepCook),
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15),
