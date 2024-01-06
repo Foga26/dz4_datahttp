@@ -11,12 +11,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  await Hive.initFlutter();
   // Инициализация Hive
   Hive.registerAdapter<RecipeInfoList>(RecipeListInfoAdapter());
   Hive.registerAdapter<RecipeStep>(RecipeStepAdapter());
   Hive.registerAdapter<RecipeStepLink>(RecipeStepLinkAdapter());
   // Hive.registerAdapter(RecipeIngredientAdapter());
-  await Hive.initFlutter();
 
   // Регистрация адаптера Hive для модели данных
 
@@ -30,7 +30,7 @@ void main() async {
   await Hive.openBox<RecipeStepLink>('recipeStepLinkInfo');
   // await Hive.openBox('meals');
 
-  // await Hive.openBox<RecipeIngredientr>('recipeIngredientInfo');
+  await Hive.openBox<RecipeIngredientr>('recipeIngredientInfoDetail');
   Hive.init(appDirectory.path);
   await Hive.openBox('imagesFromCam');
 

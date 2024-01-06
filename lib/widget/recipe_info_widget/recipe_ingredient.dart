@@ -19,7 +19,7 @@ class RecipeIngredientr {
 // Адаптер для Hive
 class RecipeIngredientAdapter extends TypeAdapter<RecipeIngredientr> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
   RecipeIngredientr read(BinaryReader reader) {

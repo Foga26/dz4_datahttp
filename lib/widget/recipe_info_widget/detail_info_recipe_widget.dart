@@ -94,7 +94,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                     name: recipeStep
                         .firstWhere((step) => step.id == e['step']['id'])
                         .name,
-                    duration: 0)))
+                    duration: recipeStep
+                        .firstWhere((step) => step.id == e['step']['id'])
+                        .duration)))
             .toList();
         setState(() {});
 
@@ -184,7 +186,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   }
 
   List<RecipeIngredientr> getLocalDataIngr() {
-    return Hive.box<RecipeIngredientr>('recipeIngredientInfo').values.toList();
+    return Hive.box<RecipeIngredientr>('recipeIngredientInfoDetail')
+        .values
+        .toList();
   }
 
   List<RecipeIngredientr> recipeIngredients = [];
@@ -192,8 +196,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     ricepiIdd,
   ) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<RecipeIngredientr> recipeIngredientBox =
-    //     Hive.box<RecipeIngredientr>('recipeIngredientInfo');
+    final Box<RecipeIngredientr> recipeIngredientBox =
+        Hive.box<RecipeIngredientr>('recipeIngredientInfoDetail');
     if (connectivityResult == ConnectivityResult.none) {
       return getLocalDataIngr();
     } else {
@@ -220,25 +224,17 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           .name,
                       caloriesForUnit: 0,
                       measureUnit:
-                          //  ingredientr
-                          //     .firstWhere(
-                          //         (ingr) => ingr.id == e['measureUnit']['id'])
-                          //     .one
-                          MeasureUnit(
-                              id: 1
-                              // e['ingredient']['id']['measureUnit']['id']
-                              ,
-                              one: '1',
-                              few: '2',
-                              many: '3')),
+                          MeasureUnit(id: 1, one: '1', few: '2', many: '3')),
                   recipeId: e['recipe']['id'],
                 ))
             .toList();
-        setState(() {});
+        setState(() {
+          recipeIngredientBox.clear();
+          recipeIngredientBox.addAll(recipeIngredients);
+        });
 
         // Добавление данных в базу Hive
-        // recipeIngredientBox.clear();
-        // recipeIngredientBox.addAll(recipeIngredients);
+
         return recipeIngredients;
       } else {
         throw Exception('Failed to fetch recipe ingredients');
@@ -252,19 +248,15 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     //     Hive.box<Ingredientr>('recipeIngredientInfo');
     // if (connectivityResult == ConnectivityResult.none) {
     //   return getLocalDataIngr();
-    // } else {
+    // }
     String apiUrl = 'https://foodapi.dzolotov.tech/ingredient';
     final response = await http.get(Uri.parse(apiUrl));
     // await fetchRecipeIngredients(widget.id);
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      // var tost = recipeIngredients
-      //     .firstWhere(
-      //         (element) => element.ingredientId == ingredientr[int.parse('id')])
-      //     .ingredientId;
+
       ingredientr = data
-          // .where((recipeId) => recipeId['recipe']['id'])
           .map((e) => Ingredientr(
                 id: e['id'],
                 name: e['name'],
@@ -273,20 +265,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                   id: e['measureUnit']['id'],
                   one: 'one',
                   few: 'few',
-                  //  measureUnitInfo
-                  //     .firstWhere(
-                  //         (element) => element.id == e['measureUnit']['id'])
-                  //     .one,
-                  // few:'few',
-                  //  measureUnitInfo
-                  //     .firstWhere(
-                  //         (element) => element.id == e['measureUnit']['id'])
-                  //     .few,
                   many: 'many',
-                  // measureUnitInfo
-                  //     .firstWhere(
-                  //         (element) => element.id == e['measureUnit']['id'])
-                  //     .many
                 ),
               ))
           .toList();
@@ -320,36 +299,14 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Widget build(BuildContext context) {
     var isExpanded = Provider.of<Test>(context).isExpanded;
     var isTimerVisible = Provider.of<Test>(context).isTimerVisible;
-    // final strInstructions =
-    //     mealDetails?['strInstructions'].toString() ?? ''.toString();
-    // instructions = strInstructions.split("\r\n");
-    chekboxValues = List<bool>.filled(recipeStepLink.length, false);
 
-    // var testik = RecipeIngredientr(
-    //     id: 0, count: 0, ingredientId: 0, recipeId: widget.mealId);
+    chekboxValues = List<bool>.filled(recipeStepLink.length, false);
 
     final stepCook = StepCookWidget(
       stepcookInfo: recipeStepLink,
-      stepNumber: 0,
+      duration: recipeStepLink,
       chekValues: chekboxValues,
     );
-
-    // var ingridients = Text(
-    //   '${mealDetails?['strIngredient1']}\n${mealDetails?['strIngredient2']}\n${mealDetails?['strIngredient3']}\n${mealDetails?['strIngredient4']}\n${mealDetails?['strIngredient5']}\n${mealDetails?['strIngredient6']}\n${mealDetails?['strIngredient7']}\n${mealDetails?['strIngredient8']}\n${mealDetails?['strIngredient9']}\n${mealDetails?['strIngredient10']}\n${mealDetails?['strIngredient11']}\n${mealDetails?['strIngredient12']}\n${mealDetails?['strIngredient13']}\n${mealDetails?['strIngredient14']}\n${mealDetails?['strIngredient15']}\n${mealDetails?['strIngredient16']}\n${mealDetails?['strIngredient17']}\n${mealDetails?['strIngredient18']}\n${mealDetails?['strIngredient19']}\n${mealDetails?['strIngredient20']}',
-    //   style: const TextStyle(
-    //       height: 2.1,
-    //       color: Colors.grey,
-    //       fontSize: 13,
-    //       fontWeight: FontWeight.w400),
-    // );
-    // var properties = Text(
-    //   '${mealDetails?['strMeasure1']}\n${mealDetails?['strMeasure2']}\n${mealDetails?['strMeasure3']}\n${mealDetails?['strMeasure4']}\n${mealDetails?['strMeasure5']}\n${mealDetails?['strMeasure6']}\n${mealDetails?['strMeasure7']}\n${mealDetails?['strMeasure8']}\n${mealDetails?['strMeasure9']}\n${mealDetails?['strMeasure10']}\n${mealDetails?['strMeasure11']}\n${mealDetails?['strMeasure12']}\n${mealDetails?['strMeasure13']}\n${mealDetails?['strMeasure14']}\n${mealDetails?['strMeasure15']}\n${mealDetails?['strMeasure16']}\n${mealDetails?['strMeasure17']}\n${mealDetails?['strMeasure18']}\n${mealDetails?['strMeasure19']}\n${mealDetails?['strMeasure20']}',
-    //   style: const TextStyle(
-    //       height: 2.1,
-    //       color: Colors.grey,
-    //       fontSize: 13,
-    //       fontWeight: FontWeight.w400),
-    // );
 
     if (widget.name.isEmpty) {
       return const Scaffold(
@@ -417,7 +374,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 80),
                                     child: Text(
-                                      '38:59',
+                                      '${widget.duration}',
                                       style: TextStyle(
                                         color: isTimerVisible
                                             ? Colors.white
@@ -672,22 +629,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           ),
                           Padding(
                               padding: const EdgeInsets.only(top: 20),
-                              child: stepCook
-                              // ListView.builder(
-                              //     physics: NeverScrollableScrollPhysics(),
-                              //     shrinkWrap: true,
-                              //     itemCount: recipeStepLink.length,
-                              //     itemBuilder:
-                              //         (BuildContext context, int index) {
-                              //       return Text(
-                              //           '${recipeStepLink[index].stepId.name}',
-                              //           style: const TextStyle(
-                              //               height: 2.1,
-                              //               color: Colors.grey,
-                              //               fontSize: 13,
-                              //               fontWeight: FontWeight.w400));
-                              //     })
-                              ),
+                              child: stepCook),
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15),

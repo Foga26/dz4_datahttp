@@ -13,14 +13,14 @@ import '../changenotif.dart';
 // ignore: must_be_immutable
 class StepCookWidget extends StatefulWidget {
   var stepcookInfo = [];
-  var stepNumber = 0;
+  var duration = [];
   var chekValues =
       []; // список значений false по количеству строк в списке stepcookInfo
 
   StepCookWidget({
     Key? key,
     required this.stepcookInfo,
-    required this.stepNumber,
+    required this.duration,
     required this.chekValues,
   }) : super(key: key);
 
@@ -155,9 +155,9 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 5, top: 10),
+                                          top: 10, right: 10),
                                       child: Text(
-                                        '2',
+                                        '${widget.stepcookInfo[index].stepId.duration} мин',
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: ready
