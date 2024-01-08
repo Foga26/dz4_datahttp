@@ -1,7 +1,6 @@
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -28,9 +27,10 @@ void main() async {
   // await Hive.openBox<RecipeInfoList>('measureunit');
   await Hive.openBox<RecipeStep>('recipeStepInfo');
   await Hive.openBox<RecipeStepLink>('recipeStepLinkInfo');
+  // await Hive.openBox<Ingredientr>('recipeIngredientInfo');
   // await Hive.openBox('meals');
 
-  await Hive.openBox<RecipeIngredientr>('recipeIngredientInfoDetail');
+  await Hive.openBox<RecipeIngridient>('recipeIngredientInfoDetail');
   Hive.init(appDirectory.path);
   await Hive.openBox('imagesFromCam');
 

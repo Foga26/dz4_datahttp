@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 

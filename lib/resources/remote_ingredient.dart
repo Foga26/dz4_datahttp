@@ -9,7 +9,7 @@ class Ingredient {
   final String name;
   final double caloriesForUnit;
   // @JsonKey(name: 'measureUnit')
-  final List<MeasureUnit> measureUnit;
+  final MeasureUnit measureUnit;
   Ingredient({
     required this.id,
     required this.name,
@@ -45,14 +45,14 @@ class RecipeIngridient {
   final int id;
   final int count;
   @JsonKey(name: 'ingredient')
-  final Ingredient ingredient;
+  final Ingredient ingredientId;
   @JsonKey(name: 'recipe')
-  final RecipeInfoList recipe;
+  final int recipeId;
   RecipeIngridient({
     required this.id,
     required this.count,
-    required this.ingredient,
-    required this.recipe,
+    required this.ingredientId,
+    required this.recipeId,
   });
   factory RecipeIngridient.fromJson(Map<String, dynamic> json) =>
       _$RecipeIngridientFromJson(json);

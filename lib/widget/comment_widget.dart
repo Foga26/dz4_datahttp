@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:dz_2/widget/tflite.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 import 'package:dz_2/resources/resources.dart';
 

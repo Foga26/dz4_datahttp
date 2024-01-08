@@ -10,9 +10,8 @@ Ingredient _$IngredientFromJson(Map<String, dynamic> json) => Ingredient(
       id: json['id'] as int,
       name: json['name'] as String,
       caloriesForUnit: (json['caloriesForUnit'] as num).toDouble(),
-      measureUnit: (json['measureUnit'] as List<dynamic>)
-          .map((e) => MeasureUnit.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      measureUnit:
+          MeasureUnit.fromJson(json['measureUnit'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$IngredientToJson(Ingredient instance) =>
@@ -20,7 +19,7 @@ Map<String, dynamic> _$IngredientToJson(Ingredient instance) =>
       'id': instance.id,
       'name': instance.name,
       'caloriesForUnit': instance.caloriesForUnit,
-      'measureUnit': instance.measureUnit.map((e) => e.toJson()).toList(),
+      'measureUnit': instance.measureUnit.toJson(),
     };
 
 MeasureUnit _$MeasureUnitFromJson(Map<String, dynamic> json) => MeasureUnit(
@@ -42,17 +41,17 @@ RecipeIngridient _$RecipeIngridientFromJson(Map<String, dynamic> json) =>
     RecipeIngridient(
       id: json['id'] as int,
       count: json['count'] as int,
-      ingredient:
+      ingredientId:
           Ingredient.fromJson(json['ingredient'] as Map<String, dynamic>),
-      recipe: RecipeInfoList.fromJson(json['recipe'] as Map<String, dynamic>),
+      recipeId: json['recipe'] as int,
     );
 
 Map<String, dynamic> _$RecipeIngridientToJson(RecipeIngridient instance) =>
     <String, dynamic>{
       'id': instance.id,
       'count': instance.count,
-      'ingredient': instance.ingredient.toJson(),
-      'recipe': instance.recipe.toJson(),
+      'ingredient': instance.ingredientId.toJson(),
+      'recipe': instance.recipeId,
     };
 
 RecipeInfoList _$RecipeInfoListFromJson(Map<String, dynamic> json) =>
