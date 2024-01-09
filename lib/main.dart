@@ -30,7 +30,7 @@ void main() async {
   // await Hive.openBox<Ingredientr>('recipeIngredientInfo');
   // await Hive.openBox('meals');
 
-  await Hive.openBox<RecipeIngridient>('recipeIngredientInfoDetail');
+  // await Hive.openBox<RecipeIngridient>('recipeIngredientInfoDetail');
   Hive.init(appDirectory.path);
   await Hive.openBox('imagesFromCam');
 

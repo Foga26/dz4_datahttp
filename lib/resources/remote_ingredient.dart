@@ -8,7 +8,7 @@ class Ingredient {
   final int id;
   final String name;
   final double caloriesForUnit;
-  // @JsonKey(name: 'measureUnit')
+  @JsonKey(name: 'measureUnit')
   final MeasureUnit measureUnit;
   Ingredient({
     required this.id,

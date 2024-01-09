@@ -224,8 +224,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         return unit['one'];
       } else if (quantity >= 2 && quantity <= 4) {
         return unit['few'];
-      } else if (quantity == 0) {
-        return 'по вкусу';
       } else {
         return unit['many'];
       }
@@ -316,6 +314,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                 ),
               ))
           .toList();
+
       setState(() {});
 
       // // Добавление данных в базу Hive
@@ -612,7 +611,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                                               index];
 
                                                       return Text(
-                                                          ' ${ingredient.count}  + ${ingredientr[index].measureUnit.id}'
+                                                          ' ${ingredient.count}   ${getUnit(ingredientr[index].measureUnit.id, ingredient.count, string)}'
                                                           // '${getUnit(ingredientr[index].measureUnit.id, ingredient.count, string)}',
                                                           ,
                                                           style: const TextStyle(
