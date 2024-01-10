@@ -36,7 +36,7 @@ List<RecipeInfoList> getLocalData() {
 
 class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
   @override
-  final typeId = 0;
+  final typeId = 6;
 
   @override
   RecipeInfoList read(BinaryReader reader) {

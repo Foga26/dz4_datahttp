@@ -1,3 +1,4 @@
+import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/model.dart';
@@ -10,19 +11,23 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   // Инициализация Hive
   Hive.registerAdapter<RecipeInfoList>(RecipeListInfoAdapter());
   Hive.registerAdapter<RecipeStep>(RecipeStepAdapter());
   Hive.registerAdapter<RecipeStepLink>(RecipeStepLinkAdapter());
+  Hive.registerAdapter(RecipeIngredientAdapter());
+  Hive.registerAdapter(IngredientAdapter());
+  Hive.registerAdapter(MeasureUnitAdapter());
   // Hive.registerAdapter(RecipeIngredientAdapter());
 
   // Регистрация адаптера Hive для модели данных
 
-  WidgetsFlutterBinding.ensureInitialized();
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
 
   // Открытие Hive-коробки
+  await Hive.openBox('recipeIngredientsBox');
   await Hive.openBox<RecipeInfoList>('recipe');
   // await Hive.openBox<RecipeInfoList>('measureunit');
   await Hive.openBox<RecipeStep>('recipeStepInfo');

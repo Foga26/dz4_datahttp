@@ -187,10 +187,10 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     }
   }
 
-  List<RecipeIngridient> getLocalDataIngr() {
-    return Hive.box<RecipeIngridient>('recipeIngredientInfoDetail')
-        .values
-        .toList();
+  Future<List<RecipeIngridient>> getLocalDataIngr() async {
+    final box = Hive.box<RecipeIngridient>('recipeIngredientsBox');
+    final localData = List<RecipeIngridient>.from(box.values);
+    return localData;
   }
 
   List<Map<String, dynamic>> string = [
@@ -236,8 +236,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     ricepiIdd,
   ) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<RecipeIngredientr> recipeIngredientBox =
-    //     Hive.box<RecipeIngredientr>('recipeIngredientInfoDetail');
+    // final Box<RecipeIngridient> recipeIngredientBox =
+    //     Hive.box<RecipeIngridient>('recipeIngredientInfoDetail');
     if (connectivityResult == ConnectivityResult.none) {
       return getLocalDataIngr();
     } else {
@@ -258,22 +258,30 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                   id: e['id'],
                   count: e['count'],
                   ingredientId: Ingredient(
-                      id: e['ingredient']['id'],
-                      name: ingredientr
-                          .firstWhere((ingredient) =>
-                              ingredient.id == e['ingredient']['id'])
-                          .name,
-                      caloriesForUnit: 0,
-                      measureUnit: MeasureUnit(
-                          id: e['id'], one: 'one', few: 'few', many: 'many')),
+                    id: e['ingredient']['id'],
+                    name: ingredientr
+                        .firstWhere((ingredient) =>
+                            ingredient.id == e['ingredient']['id'])
+                        .name,
+                    caloriesForUnit: 0,
+                    measureUnit: MeasureUnit(
+                      id: e['id'],
+                      one: 'one',
+                      few: 'few',
+                      many: 'many',
+                    ),
+                  ),
                   recipeId: e['recipe']['id'],
                 ))
             .toList();
+        final box = Hive.box<RecipeIngridient>('recipeIngredientsBox');
+        for (var recipeIngredient in recipeIngredients) {
+          box.clear();
+          box.add(recipeIngredient);
+        }
 
         setState(() {});
 
-        // recipeIngredientBox.clear();
-        // recipeIngredientBox.addAll(recipeIngredients);
         // Добавление данных в базу Hive
 
         return recipeIngredients;
