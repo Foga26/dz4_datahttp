@@ -42,7 +42,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
   Map<String, dynamic>? mealDetails = {};
   List<String> instructions = [];
   List<bool> chekboxValues = [];
-  List<dynamic> ingredientr = [];
+  List<Ingredient> ingredientr = [];
   List<MeasureUnit> measureUnitInfo = [];
   List<RecipeStep> recipeStep = [];
 
@@ -103,6 +103,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         // Добавление данных в базу Hive
         Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
         Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
+
         // recipeStepLinkBox.clear();
         // recipeStepLinkBox.addAll(recipeStepLink);
         return recipeStepLink;
@@ -110,10 +111,6 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         throw Exception('Failed to fetch recipe ingredients');
       }
     }
-  }
-
-  List<MeasureUnit> getLocalDataMeasureUnit() {
-    return Hive.box<MeasureUnit>('measureunit').values.toList();
   }
 
   Future<List<RecipeStep>> fetchRecipeStep() async {
@@ -154,43 +151,43 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     }
   }
 
-  Future<List<MeasureUnit>> fetchIngredientsMeasureUnit() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<Ingredientr> recipeIngredientBox =
-    //     Hive.box<Ingredientr>('recipeIngredientInfo');
-    // if (connectivityResult == ConnectivityResult.none) {
-    //   return getLocalDataIngr();
-    // } else {
-    String apiUrl = 'https://foodapi.dzolotov.tech/measure_unit';
-    final response = await http.get(Uri.parse(apiUrl));
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-
-      measureUnitInfo = data
-          // .where((recipeId) => recipeId['recipe']['id'])
-          .map((e) => MeasureUnit(
-                id: e['id'],
-                one: e['one'],
-                few: e['few'],
-                many: e['many'],
-              ))
-          .toList();
-      setState(() {});
-
-      // Добавление данных в базу Hive
-      // recipeIngredientBox.clear();
-      // recipeIngredientBox.addAll(ingredientr);
-      return measureUnitInfo;
-    } else {
-      throw Exception('Failed to fetch recipe ingredients');
-    }
+  List<MeasureUnit> getLocalDataMeasureUnit() {
+    measureUnitInfo = Hive.box<MeasureUnit>('measureUnitBox').values.toList();
+    return measureUnitInfo;
   }
 
-  Future<List<RecipeIngridient>> getLocalDataIngr() async {
-    final box = Hive.box<RecipeIngridient>('recipeIngredientsBox');
-    final localData = List<RecipeIngridient>.from(box.values);
-    return localData;
+  Future<List<MeasureUnit>> fetchIngredientsMeasureUnit() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    final Box<MeasureUnit> measureUnitBox =
+        Hive.box<MeasureUnit>('measureUnitBox');
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalDataMeasureUnit();
+    } else {
+      String apiUrl = 'https://foodapi.dzolotov.tech/measure_unit';
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+
+        measureUnitInfo = data
+            // .where((recipeId) => recipeId['recipe']['id'])
+            .map((e) => MeasureUnit(
+                  id: e['id'],
+                  one: e['one'],
+                  few: e['few'],
+                  many: e['many'],
+                ))
+            .toList();
+        setState(() {});
+
+        // Добавление данных в базу Hive
+        measureUnitBox.clear();
+        measureUnitBox.addAll(measureUnitInfo);
+        return measureUnitInfo;
+      } else {
+        throw Exception('Failed to fetch recipe ingredients');
+      }
+    }
   }
 
   List<Map<String, dynamic>> string = [
@@ -231,13 +228,20 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     return '';
   }
 
+  List<RecipeIngridient> getLocalDataIngr() {
+    recipeIngredients = Hive.box<RecipeIngridient>('recipeIngredientInfoDetail')
+        .values
+        .toList();
+    return recipeIngredients;
+  }
+
   List<RecipeIngridient> recipeIngredients = [];
   Future<List<RecipeIngridient>> fetchRecipeIngredients(
     ricepiIdd,
   ) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<RecipeIngridient> recipeIngredientBox =
-    //     Hive.box<RecipeIngridient>('recipeIngredientInfoDetail');
+    final Box<RecipeIngridient> recipeIngredientBox =
+        Hive.box<RecipeIngridient>('recipeIngredientInfoDetail');
     if (connectivityResult == ConnectivityResult.none) {
       return getLocalDataIngr();
     } else {
@@ -258,29 +262,21 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                   id: e['id'],
                   count: e['count'],
                   ingredientId: Ingredient(
-                    id: e['ingredient']['id'],
-                    name: ingredientr
-                        .firstWhere((ingredient) =>
-                            ingredient.id == e['ingredient']['id'])
-                        .name,
-                    caloriesForUnit: 0,
-                    measureUnit: MeasureUnit(
-                      id: e['id'],
-                      one: 'one',
-                      few: 'few',
-                      many: 'many',
-                    ),
-                  ),
+                      id: e['ingredient']['id'],
+                      name: ingredientr
+                          .firstWhere((ingredient) =>
+                              ingredient.id == e['ingredient']['id'])
+                          .name,
+                      caloriesForUnit: 0,
+                      measureUnit: MeasureUnit(
+                          id: e['id'], one: 'one', few: 'few', many: 'many')),
                   recipeId: e['recipe']['id'],
                 ))
             .toList();
-        final box = Hive.box<RecipeIngridient>('recipeIngredientsBox');
-        for (var recipeIngredient in recipeIngredients) {
-          box.clear();
-          box.add(recipeIngredient);
-        }
-
-        setState(() {});
+        recipeIngredientBox.clear();
+        recipeIngredientBox.addAll(recipeIngredients);
+        print(recipeIngredientBox.values.first.ingredientId.name);
+        // setState(() {});
 
         // Добавление данных в базу Hive
 
@@ -291,13 +287,18 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
     }
   }
 
-  Future<List<dynamic>> fetchIngredients() async {
+  List<Ingredient> getLocalIngr() {
+    ingredientr = Hive.box<Ingredient>('recipeIngredientInfo').values.toList();
+    return ingredientr;
+  }
+
+  Future<List<Ingredient>> fetchIngredients() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<Ingredientr> recipeIngredientBox =
-    //     Hive.box<Ingredientr>('recipeIngredientInfo');
-    // if (connectivityResult == ConnectivityResult.none) {
-    //   return getLocalDataIngr();
-    // }
+    final Box<Ingredient> recipeIngredientBox =
+        Hive.box<Ingredient>('recipeIngredientInfo');
+    if (connectivityResult == ConnectivityResult.none) {
+      return getLocalIngr();
+    }
     // fetchRecipeIngredients(
     //   widget.id,
     // );
@@ -326,8 +327,8 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
       setState(() {});
 
       // // Добавление данных в базу Hive
-      // recipeIngredientBox.clear();
-      // recipeIngredientBox.addAll(ingredientr as Iterable<Ingredientr>);
+      recipeIngredientBox.clear();
+      recipeIngredientBox.addAll(ingredientr);
       return ingredientr;
     } else {
       throw Exception('Failed to fetch recipe ingredients');

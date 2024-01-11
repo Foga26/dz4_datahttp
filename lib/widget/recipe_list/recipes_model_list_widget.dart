@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -62,30 +63,83 @@ class RecipeListInfoAdapter extends TypeAdapter<RecipeInfoList> {
   }
 }
 
-// Future<List<MeasureUnit>> fetchMeasureUnit() async {
-//   // Проверка подключения к Интернету
-//   var connectivityResult = await (Connectivity().checkConnectivity());
+class RecipeIngridientListInfoAdapter extends TypeAdapter<RecipeIngridient> {
+  @override
+  final typeId = 7;
 
-//   if (connectivityResult == ConnectivityResult.none) {
-//     return getLocalDataMeasureUnit();
-//   } else {
-//     final response =
-//         await http.get(Uri.parse('https://foodapi.dzolotov.tech/measure_unit'));
-//     if (response.statusCode == 200) {
-//       var data = json.decode(response.body) as List;
+  @override
+  RecipeIngridient read(BinaryReader reader) {
+    var id = reader.readInt();
+    var count = reader.readInt();
+    var ingredientId = reader.read() as Ingredient;
+    var recipeId = reader.readInt();
+    return RecipeIngridient(
+      id: id,
+      count: count,
+      ingredientId: ingredientId,
+      recipeId: recipeId,
+    );
+  }
 
-//       // data['categories'] as List;
-//       List<MeasureUnit> result =
-//           data.map((recipeingr) => MeasureUnit.fromJson(recipeingr)).toList();
-//       Hive.box<MeasureUnit>('measureunit').clear();
-//       Hive.box<MeasureUnit>('measureunit').addAll(result);
-//       return result;
-//     } else {
-//       throw Exception('Failed to load categories');
-//     }
-//   }
-// }
+  @override
+  void write(BinaryWriter writer, RecipeIngridient obj) {
+    writer.writeInt(obj.id);
+    writer.writeInt(obj.count);
+    writer.write(obj.ingredientId);
+    writer.writeInt(obj.recipeId);
+  }
+}
 
-// List<MeasureUnit> getLocalDataMeasureUnit() {
-//   return Hive.box<MeasureUnit>('measureunit').values.toList();
-// }
+class IngridientListInfoAdapter extends TypeAdapter<Ingredient> {
+  @override
+  final typeId = 8;
+
+  @override
+  Ingredient read(BinaryReader reader) {
+    var id = reader.readInt();
+    var name = reader.readString();
+    var caloriesForUnit = reader.readDouble();
+    var measureUnit = reader.read() as MeasureUnit;
+    return Ingredient(
+      id: id,
+      name: name,
+      caloriesForUnit: caloriesForUnit,
+      measureUnit: measureUnit,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Ingredient obj) {
+    writer.writeInt(obj.id);
+    writer.writeString(obj.name);
+    writer.writeDouble(obj.caloriesForUnit);
+    writer.write(obj.measureUnit);
+  }
+}
+
+class MeasureUnitAdapter extends TypeAdapter<MeasureUnit> {
+  @override
+  final typeId = 9;
+
+  @override
+  MeasureUnit read(BinaryReader reader) {
+    var id = reader.readInt();
+    var one = reader.readString();
+    var few = reader.readString();
+    var many = reader.readString();
+    return MeasureUnit(
+      id: id,
+      one: one,
+      few: few,
+      many: many,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, MeasureUnit obj) {
+    writer.writeInt(obj.id);
+    writer.writeString(obj.one);
+    writer.writeString(obj.few);
+    writer.writeString(obj.many);
+  }
+}

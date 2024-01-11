@@ -32,6 +32,11 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
     super.initState();
     model.loadRecipeList();
 
+    // IngredientModel().loadRecipeList();
+
+    // RecipeStepkModel().loadRecipeList();
+    // MeasureUnitModel().loadRecipeList();
+
     // fetchMeasureUnit();
   }
 

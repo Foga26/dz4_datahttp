@@ -6,26 +6,26 @@ part of 'local_data.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class RecipeIngredientAdapter extends TypeAdapter<RecipeIngredient> {
+class RecipeIngredientLocalAdapter extends TypeAdapter<RecipeIngredientLocal> {
   @override
   final int typeId = 0;
 
   @override
-  RecipeIngredient read(BinaryReader reader) {
+  RecipeIngredientLocal read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return RecipeIngredient(
+    return RecipeIngredientLocal(
       id: fields[0] as int,
       count: fields[1] as int,
-      ingredient: fields[2] as Ingredient,
+      ingredient: fields[2] as IngredientLocal,
       recipeId: fields[3] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, RecipeIngredient obj) {
+  void write(BinaryWriter writer, RecipeIngredientLocal obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -44,31 +44,31 @@ class RecipeIngredientAdapter extends TypeAdapter<RecipeIngredient> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RecipeIngredientAdapter &&
+      other is RecipeIngredientLocalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class IngredientAdapter extends TypeAdapter<Ingredient> {
+class IngredientLocalAdapter extends TypeAdapter<IngredientLocal> {
   @override
   final int typeId = 1;
 
   @override
-  Ingredient read(BinaryReader reader) {
+  IngredientLocal read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Ingredient(
+    return IngredientLocal(
       id: fields[0] as int,
       name: fields[1] as String,
-      caloriesForUnit: fields[2] as int,
-      measureUnit: fields[3] as MeasureUnit,
+      caloriesForUnit: fields[2] as double,
+      measureUnit: fields[3] as MeasureUnitLocal,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Ingredient obj) {
+  void write(BinaryWriter writer, IngredientLocal obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -87,22 +87,22 @@ class IngredientAdapter extends TypeAdapter<Ingredient> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is IngredientAdapter &&
+      other is IngredientLocalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class MeasureUnitAdapter extends TypeAdapter<MeasureUnit> {
+class MeasureUnitLocalAdapter extends TypeAdapter<MeasureUnitLocal> {
   @override
   final int typeId = 2;
 
   @override
-  MeasureUnit read(BinaryReader reader) {
+  MeasureUnitLocal read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return MeasureUnit(
+    return MeasureUnitLocal(
       id: fields[0] as int,
       one: fields[1] as String,
       few: fields[2] as String,
@@ -111,7 +111,7 @@ class MeasureUnitAdapter extends TypeAdapter<MeasureUnit> {
   }
 
   @override
-  void write(BinaryWriter writer, MeasureUnit obj) {
+  void write(BinaryWriter writer, MeasureUnitLocal obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -130,7 +130,7 @@ class MeasureUnitAdapter extends TypeAdapter<MeasureUnit> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MeasureUnitAdapter &&
+      other is MeasureUnitLocalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

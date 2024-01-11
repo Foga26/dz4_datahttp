@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'local_data.g.dart';
 
 @HiveType(typeId: 0)
-class RecipeIngredient extends HiveObject {
+class RecipeIngredientLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -11,12 +11,12 @@ class RecipeIngredient extends HiveObject {
   final int count;
 
   @HiveField(2)
-  final Ingredient ingredient;
+  final IngredientLocal ingredient;
 
   @HiveField(3)
   final int recipeId;
 
-  RecipeIngredient({
+  RecipeIngredientLocal({
     required this.id,
     required this.count,
     required this.ingredient,
@@ -25,7 +25,7 @@ class RecipeIngredient extends HiveObject {
 }
 
 @HiveType(typeId: 1)
-class Ingredient extends HiveObject {
+class IngredientLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -33,12 +33,12 @@ class Ingredient extends HiveObject {
   final String name;
 
   @HiveField(2)
-  final int caloriesForUnit;
+  final double caloriesForUnit;
 
   @HiveField(3)
-  final MeasureUnit measureUnit;
+  final MeasureUnitLocal measureUnit;
 
-  Ingredient({
+  IngredientLocal({
     required this.id,
     required this.name,
     required this.caloriesForUnit,
@@ -47,7 +47,7 @@ class Ingredient extends HiveObject {
 }
 
 @HiveType(typeId: 2)
-class MeasureUnit extends HiveObject {
+class MeasureUnitLocal extends HiveObject {
   @HiveField(0)
   final int id;
 
@@ -60,7 +60,7 @@ class MeasureUnit extends HiveObject {
   @HiveField(3)
   final String many;
 
-  MeasureUnit({
+  MeasureUnitLocal({
     required this.id,
     required this.one,
     required this.few,
