@@ -1,11 +1,4 @@
-import 'dart:convert';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
-import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +12,28 @@ class RecipesListModel extends ChangeNotifier {
   }
 }
 
+class RecipesIngredientListModel extends ChangeNotifier {
+  var recipeInfoList = <RecipeIngridient>[];
+  var igredientListModel = <Ingredient>[];
 
+  Future<void> loadRecipeList(id) async {
+    final recipeListResponse = await fetchRecipeIngredients(id);
+    final ingredientResponse = await fetchIngredients();
+    recipeInfoList.addAll(recipeListResponse);
+    igredientListModel.addAll(ingredientResponse);
+    notifyListeners();
+  }
+}
 
+// class IngredientListModel extends ChangeNotifier {
+//   var igredientListModel = <Ingredient>[];
 
+//   Future<void> loadRecipeList() async {
+//     final recipeListResponse = await fetchIngredients();
+//     igredientListModel.addAll(recipeListResponse);
+//     notifyListeners();
+//   }
+// }
 
 
 

@@ -2,6 +2,7 @@ import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -57,10 +58,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => Test(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => RecipesListModel(),
+          create: (
+            context,
+          ) =>
+              Test(),
         ),
       ],
       child: MaterialApp(

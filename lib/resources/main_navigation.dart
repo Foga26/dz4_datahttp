@@ -1,12 +1,6 @@
-import 'dart:convert';
-
-import 'package:dz_2/resources/remote_ingredient.dart';
-import 'package:dz_2/widget/model.dart';
-
 import 'package:flutter/material.dart';
 import '../widget/auth_widget.dart';
-import '../widget/inherit_model.dart';
-import '../widget/main_screen/main_screen_model.dart';
+
 import '../widget/main_screen/main_screen_widget.dart';
 
 import '../widget/recipe_info_widget/detail_info_recipe_widget.dart';
@@ -22,8 +16,7 @@ abstract class MainNavigationRouteNames {
 
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
-        model: MainScreenModel(), child: const MainScreenwidget())),
+    MainNavigationRouteNames.mainPage: ((context) => const MainScreenwidget()),
     '/main': (context) => const MainScreenwidget(),
     '/recipes': (context) => RecipesListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(

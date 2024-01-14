@@ -1,11 +1,7 @@
-import 'dart:convert';
-
-import 'package:connectivity/connectivity.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:dz_2/resources/app_color.dart';
 
 import '../changenotif.dart';

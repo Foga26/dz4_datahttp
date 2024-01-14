@@ -3,6 +3,7 @@ import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/auth_widget.dart';
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class MainScreenwidget extends StatefulWidget {
 class _MainScreenwidgetState extends State<MainScreenwidget> {
   int _selectedTab = 0;
   var model = RecipesListModel();
+  var test = RecipesIngredientListModel();
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -31,6 +33,8 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
   void initState() {
     super.initState();
     model.loadRecipeList();
+
+    // modeltwo.loadRecipeList();
 
     // IngredientModel().loadRecipeList();
 
