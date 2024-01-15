@@ -6,7 +6,7 @@ import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:dz_2/widget/changenotif.dart';
+import 'package:dz_2/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';

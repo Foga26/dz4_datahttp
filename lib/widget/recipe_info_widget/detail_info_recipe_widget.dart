@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 
-import 'package:dz_2/widget/changenotif.dart';
+import 'package:dz_2/widget/state_of_cook.dart';
 
 import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
@@ -379,7 +379,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                             // height: 297,
                             child: Padding(
                                 padding:
-                                    const EdgeInsets.only(right: 10, left: 8),
+                                    const EdgeInsets.only(right: 0, left: 1),
                                 child: ChangeNotifierProvider(
                                     create: (context) => test,
                                     child: RecipeIngredientList())),
@@ -427,7 +427,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 fontSize: 16)),
                       ),
                       Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(
+                            top: 20,
+                          ),
                           child: stepCook),
                       Center(
                         child: Padding(

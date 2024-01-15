@@ -47,49 +47,42 @@ class RecipeIngredientList extends StatelessWidget {
     var model = context.watch<RecipesIngredientListModel>();
     return Row(
       children: [
-        Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: SizedBox(
-                width: 200,
-                child: model.recipeInfoList.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: model.recipeInfoList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Text(
-                              ' ${model.recipeInfoList[index].ingredientId.name}',
-                              style: const TextStyle(
-                                  height: 2.1,
-                                  color: Colors.grey,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400));
-                        }))),
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 15,
-          ),
-          child: SizedBox(
-              width: 135,
-              child: model.recipeInfoList.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: model.recipeInfoList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Text(
-                            ' ${model.recipeInfoList[index].count}  ${getUnit(model.igredientListModel[index].measureUnit.id, model.recipeInfoList[index].count, string)}'
-                            // '${getUnit(ingredientr[index].measureUnit.id, ingredient.count, string)}',
-                            ,
-                            style: const TextStyle(
-                                height: 2.1,
-                                color: Colors.grey,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400));
-                      })),
-        ),
+        SizedBox(
+            width: 200,
+            child: model.recipeInfoList.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: model.recipeInfoList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Text(
+                          ' ${model.recipeInfoList[index].ingredientId.name}',
+                          style: const TextStyle(
+                              height: 2.1,
+                              color: Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400));
+                    })),
+        SizedBox(
+            width: 135,
+            child: model.recipeInfoList.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: model.recipeInfoList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Text(
+                          ' ${model.recipeInfoList[index].count}  ${getUnit(model.igredientListModel[index].measureUnit.id, model.recipeInfoList[index].count, string)}'
+                          // '${getUnit(ingredientr[index].measureUnit.id, ingredient.count, string)}',
+                          ,
+                          style: const TextStyle(
+                              height: 2.1,
+                              color: Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400));
+                    })),
       ],
     );
   }
