@@ -138,7 +138,7 @@ List<RecipeInfoList> getLocalData() {
 }
 
 List<RecipeIngridient> getLocalDataIngr() {
-  return Hive.box<RecipeIngridient>('recipeIngredientInfoDetail')
+  return  Hive.box<RecipeIngridient>('recipeIngredientInfoDetail')
       .values
       .toList();
 }
@@ -182,12 +182,12 @@ Future<List<RecipeIngridient>> fetchRecipeIngredients(ricepiIdd) async {
           .toList();
       recipeIngredientBox.clear();
       recipeIngredientBox.addAll(recipeIngredients);
-      print(recipeIngredientBox.values.first.ingredientId.name);
+
       // setState(() {});
 
       // Добавление данных в базу Hive
 
-      return recipeIngredients;
+      return recipeIngredientBox.values.toList();
     } else {
       throw Exception('Failed to fetch recipe ingredients');
     }

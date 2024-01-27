@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/widget/model.dart';
 
-import '../changenotif.dart';
+import '../state_of_cook.dart';
 
 // ignore: must_be_immutable
 class StepCookWidget extends StatefulWidget {
@@ -99,7 +99,7 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 33, right: 20),
+                                          top: 33, right: 10),
                                       child: AnimatedBuilder(
                                         animation: _animation!,
                                         builder: (context, child) {
@@ -144,7 +144,7 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 10, right: 10),
+                                          top: 10, right: 5),
                                       child: Text(
                                         '${resipeStep[index].stepId.duration} мин',
                                         style: TextStyle(

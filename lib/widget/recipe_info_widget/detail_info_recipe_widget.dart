@@ -1,10 +1,11 @@
 import 'package:dz_2/resources/local_data.dart';
+import 'package:dz_2/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/widget/changenotif.dart';
+
 import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
