@@ -1,21 +1,28 @@
+import 'package:dz_2/resources/local_data.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/inherit_model.dart';
+
 import 'package:dz_2/widget/model.dart';
 import 'package:flutter/material.dart';
 import 'package:dz_2/resources/main_navigation.dart';
+import 'package:provider/provider.dart';
+
 import '../../resources/app_color.dart';
 
 class RecipesListWidget extends StatelessWidget {
-  RecipesListWidget({
+  const RecipesListWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var gg = context.watch<RecipesListModel>();
     var model = NotifierProvider.watch<RecipesListModel>(context);
-    // var modelIngr = NotifierProvider.watch<RecipeIngridientModel>(context)
-    //     ?.recipeIngridient;
 
     return Scaffold(
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.black),
+        ),
         backgroundColor: ColorApp.backGroundColor,
         body: SafeArea(
             child: Padding(
@@ -29,19 +36,31 @@ class RecipesListWidget extends StatelessWidget {
                   },
                   itemCount: model?.recipeInfoList.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
+                    final List<RecipeInfoList> recipes = model!.recipeInfoList;
+                    var recipe = recipes[index];
+                    var recipeInfoWidget = RecipeInfoListLocal(
+                        id: recipe.id,
+                        name: recipe.name,
+                        photo: recipe.photo,
+                        duration: recipe.duration);
+                    bool isFavor = context
+                        .watch<RecipesListModel>()
+                        .isFavorite(recipeInfoWidget);
+
                     {
                       return Container(
-                        margin: EdgeInsets.only(left: 16, right: 16),
+                        margin: const EdgeInsets.only(left: 16, right: 16),
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 0,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                                 blurRadius: 5)
                           ],
                           color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
                         ),
                         width: 396,
                         height: 136,
@@ -53,7 +72,7 @@ class RecipesListWidget extends StatelessWidget {
                                 bottomLeft: Radius.circular(5),
                               ),
                               child: Image.network(
-                                model!.recipeInfoList[index].photo,
+                                model.recipeInfoList[index].photo,
                                 fit: BoxFit.fill,
                                 width: 149,
                                 height: 136,
@@ -76,15 +95,18 @@ class RecipesListWidget extends StatelessWidget {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 165, top: 60),
-                              child: Text(
-                                '${model.recipeInfoList[index].duration} минут',
-                                style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis),
-                                maxLines: 2,
-                              ),
+                                  const EdgeInsets.only(left: 300, top: 80),
+                              child: isFavor
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      size: 25,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(
+                                      Icons.favorite,
+                                      size: 25,
+                                      color: Colors.black,
+                                    ),
                             ),
                             const Padding(
                               padding: EdgeInsets.only(top: 95, left: 165),
@@ -94,12 +116,13 @@ class RecipesListWidget extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 94, left: 192),
+                              padding:
+                                  const EdgeInsets.only(top: 94, left: 192),
                               child: SizedBox(
                                 height: 19,
                                 child: Text(
                                   '${model.recipeInfoList[index].duration} минут',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: ColorApp.textColorGreen,
                                       fontSize: 16),
                                 ),

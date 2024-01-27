@@ -67,11 +67,12 @@ class RecipeInfoList {
   final String photo;
   final int duration;
 
-  RecipeInfoList(
-      {required this.id,
-      required this.name,
-      required this.photo,
-      required this.duration});
+  RecipeInfoList({
+    required this.id,
+    required this.name,
+    required this.photo,
+    required this.duration,
+  });
   factory RecipeInfoList.fromJson(Map<String, dynamic> json) =>
       _$RecipeInfoListFromJson(json);
 

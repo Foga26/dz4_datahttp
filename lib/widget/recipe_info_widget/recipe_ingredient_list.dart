@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 class RecipeIngredientList extends StatelessWidget {
   RecipeIngredientList({super.key});
-  List<Map<String, dynamic>> string = [
+  final List<Map<String, dynamic>> string = [
     {"id": 1, "one": "штука", "few": "штуки", "many": "штук"},
     {"id": 2, "one": "грамм", "few": "грамма", "many": "граммов"},
     {"id": 3, "one": "банка", "few": "банки", "many": "банок"},

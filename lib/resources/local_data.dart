@@ -67,3 +67,22 @@ class MeasureUnitLocal extends HiveObject {
     required this.many,
   });
 }
+
+@HiveType(typeId: 3)
+class RecipeInfoListLocal extends HiveObject {
+  @HiveField(0)
+  final int id;
+  @HiveField(1)
+  final String name;
+  @HiveField(2)
+  final String photo;
+  @HiveField(3)
+  final int duration;
+
+  RecipeInfoListLocal({
+    required this.id,
+    required this.name,
+    required this.photo,
+    required this.duration,
+  });
+}

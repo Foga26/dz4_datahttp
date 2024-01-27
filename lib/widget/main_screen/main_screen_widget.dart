@@ -1,11 +1,8 @@
 import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/auth_widget.dart';
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
-import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 import '../../resources/app_color.dart';
 
@@ -47,11 +44,11 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOption = <Widget>[
-      NotifierProvider(model: model, child: RecipesListWidget()),
+      NotifierProvider(model: model, child: const RecipesListWidget()),
       const AuthWidget(),
     ];
     if (model.recipeInfoList.isEmpty) {
-      CircularProgressIndicator();
+      const CircularProgressIndicator();
     }
     return Scaffold(
       body: SafeArea(

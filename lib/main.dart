@@ -2,7 +2,6 @@ import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -10,7 +9,6 @@ import 'package:dz_2/widget/changenotif.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +23,7 @@ void main() async {
   Hive.registerAdapter<RecipeStepLink>(RecipeStepLinkAdapter());
   Hive.registerAdapter<Ingredient>(IngridientListInfoAdapter());
   Hive.registerAdapter<MeasureUnit>(MeasureUnitAdapter());
+  Hive.registerAdapter(RecipeInfoListLocalAdapter());
   // Hive.registerAdapter(RecipeIngredientLocalAdapter());
   // Hive.registerAdapter(IngredientLocalAdapter());
   // Hive.registerAdapter(MeasureUnitLocalAdapter());
@@ -33,6 +32,8 @@ void main() async {
   // Регистрация адаптера Hive для модели данных
 
   // Открытие Hive-коробки
+
+  await Hive.openBox<RecipeInfoListLocal>('favoritesRecipe');
   await Hive.openBox('recipeIngredientsBox');
   await Hive.openBox<RecipeInfoList>('recipe');
   // await Hive.openBox<RecipeInfoList>('measureunit');
@@ -62,6 +63,18 @@ class MyApp extends StatelessWidget {
             context,
           ) =>
               Test(),
+        ),
+        ChangeNotifierProvider(
+          create: (
+            context,
+          ) =>
+              RecipesListModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (
+            context,
+          ) =>
+              RecipeStepModel(),
         ),
       ],
       child: MaterialApp(

@@ -26,26 +26,26 @@ class NotifierProvider<Model extends ChangeNotifier> extends InheritedNotifier {
   }
 }
 
-class Provider<Model> extends InheritedWidget {
-  final Model model;
-  const Provider({
-    Key? key,
-    required Widget child,
-    required this.model,
-  }) : super(key: key, child: child);
-  static Model? watch<Model>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Provider<Model>>()?.model;
-  }
+// class Provider<Model> extends InheritedWidget {
+//   final Model model;
+//   const Provider({
+//     Key? key,
+//     required Widget child,
+//     required this.model,
+//   }) : super(key: key, child: child);
+//   static Model? watch<Model>(BuildContext context) {
+//     return context.dependOnInheritedWidgetOfExactType<Provider<Model>>()?.model;
+//   }
 
-  static Model? read<Model>(BuildContext context) {
-    final widget = context
-        .getElementForInheritedWidgetOfExactType<Provider<Model>>()
-        ?.widget;
-    return widget is Provider<Model> ? widget.model : null;
-  }
+//   static Model? read<Model>(BuildContext context) {
+//     final widget = context
+//         .getElementForInheritedWidgetOfExactType<Provider<Model>>()
+//         ?.widget;
+//     return widget is Provider<Model> ? widget.model : null;
+//   }
 
-  @override
-  bool updateShouldNotify(Provider oldWidget) {
-    return model != oldWidget.model;
-  }
-}
+//   @override
+//   bool updateShouldNotify(Provider oldWidget) {
+//     return model != oldWidget.model;
+//   }
+// }

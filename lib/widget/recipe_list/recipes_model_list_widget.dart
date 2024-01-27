@@ -1,10 +1,7 @@
 import 'dart:convert';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
-import 'package:flutter/material.dart';
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -240,82 +237,6 @@ Future<List<Ingredient>> fetchIngredients() async {
   }
 }
 
-List<RecipeStepLink> getLocalDataRecipeStepLink() {
-  return Hive.box<RecipeStepLink>('recipeStepLinkInfo').values.toList();
-}
-
-List<RecipeStep> getLocalDataRecipeStep() {
-  return Hive.box<RecipeStep>('recipeStepInfo').values.toList();
-}
-
-Future<List<RecipeStepLink>> fetchRecipeStepLinks(
-  ricepiIdd,
-) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-
-  if (connectivityResult == ConnectivityResult.none) {
-    return getLocalDataRecipeStepLink();
-  } else {
-    String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step_link';
-
-    final response = await http.get(Uri.parse(apiUrl));
-    if (response.statusCode == 200) {
-      await fetchRecipeStep();
-      List<dynamic> data = jsonDecode(response.body);
-      // var bb = measureUnit
-      //     .firstWhere((element) => element.id == element.measureUnit.id)
-      //     .id;
-      List<RecipeStepLink> recipeStepLink = data
-          .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
-          .map((e) => RecipeStepLink.fromJson(e))
-          .toList();
-
-      // Добавление данных в базу Hive
-      Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
-      Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
-
-      // recipeStepLinkBox.clear();
-      // recipeStepLinkBox.addAll(recipeStepLink);
-      return recipeStepLink;
-    } else {
-      throw Exception('Failed to fetch recipe ingredients');
-    }
-  }
-}
-
-Future<List<RecipeStep>> fetchRecipeStep() async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
-
-  if (connectivityResult == ConnectivityResult.none) {
-    return getLocalDataRecipeStep();
-  } else {
-    String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step';
-
-    final response = await http.get(Uri.parse(apiUrl));
-    if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-      // var bb = measureUnit
-      //     .firstWhere((element) => element.id == element.measureUnit.id)
-      //     .id;
-      List<RecipeStep> recipeStep = data
-          // .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
-          .map((e) => RecipeStep.fromJson(e))
-          .toList();
-
-      // Добавление данных в базу Hive
-
-      Hive.box<RecipeStep>('recipeStepInfo').clear();
-      Hive.box<RecipeStep>('recipeStepInfo').addAll(recipeStep);
-      // recipeStepBox.clear();
-      // recipeStepBox.addAll(recipeStep);
-      return recipeStep;
-    } else {
-      throw Exception('Failed to fetch recipe ingredients');
-    }
-  }
-}
-
 List<MeasureUnit> getLocalDataMeasureUnit() {
   return Hive.box<MeasureUnit>('measureUnitBox').values.toList();
 }
@@ -347,4 +268,102 @@ Future<List<MeasureUnit>> fetchIngredientsMeasureUnit() async {
       throw Exception('Failed to fetch recipe ingredients');
     }
   }
+}
+
+List<RecipeStepLink> getLocalDataRecipeStepLink() {
+  return Hive.box<RecipeStepLink>('recipeStepLinkInfo').values.toList();
+}
+
+List<RecipeStep> getLocalDataRecipeStep() {
+  return Hive.box<RecipeStep>('recipeStepInfo').values.toList();
+}
+
+Future<List<RecipeStepLink>> fetchRecipeStepLinks(
+  ricepiIdd,
+) async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult == ConnectivityResult.none) {
+    return getLocalDataRecipeStepLink();
+  } else {
+    String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step_link';
+
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      var bbb = <RecipeStep>[];
+      var recipeStep = await fetchRecipeStep();
+      bbb.addAll(recipeStep);
+      List<dynamic> data = jsonDecode(response.body);
+      // var bb = measureUnit
+      //     .firstWhere((element) => element.id == element.measureUnit.id)
+      //     .id;
+      var recipeStepLink = data
+          .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+          .map((e) => RecipeStepLink(
+              id: e['id'],
+              number: e['number'],
+              recipeId: e['recipe']['id'],
+              stepId: RecipeStep(
+                  id: e['step']['id'],
+                  name:
+                      bbb.firstWhere((step) => step.id == e['step']['id']).name,
+                  duration: bbb
+                      .firstWhere((step) => step.id == e['step']['id'])
+                      .duration)))
+          .toList();
+
+      // Добавление данных в базу Hive
+      Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
+      Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
+
+      // recipeStepLinkBox.clear();
+      // recipeStepLinkBox.addAll(recipeStepLink);
+      return recipeStepLink;
+    } else {
+      throw Exception('Failed to fetch recipe ingredients');
+    }
+  }
+}
+
+Future<List<RecipeStep>> fetchRecipeStep() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
+
+  if (connectivityResult == ConnectivityResult.none) {
+    return getLocalDataRecipeStep();
+  } else {
+    String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step';
+
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      // var bb = measureUnit
+      //     .firstWhere((element) => element.id == element.measureUnit.id)
+      //     .id;
+      var recipeStep = data
+          // .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
+          .map((e) => RecipeStep(
+                id: e['id'],
+                name: e['name'],
+                duration: e['duration'],
+              ))
+          .toList();
+
+      // Добавление данных в базу Hive
+
+      Hive.box<RecipeStep>('recipeStepInfo').clear();
+      Hive.box<RecipeStep>('recipeStepInfo').addAll(recipeStep);
+      // recipeStepBox.clear();
+      // recipeStepBox.addAll(recipeStep);
+      return recipeStep;
+    } else {
+      throw Exception('Failed to fetch recipe ingredients');
+    }
+  }
+}
+
+class RecipeState {
+  bool isFavorite;
+
+  RecipeState({this.isFavorite = false});
 }

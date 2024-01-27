@@ -1,24 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:connectivity/connectivity.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
-
-import 'package:dz_2/widget/changenotif.dart';
-
-import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
+import 'package:dz_2/resources/local_data.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
 import 'package:rive/rive.dart';
 import 'package:dz_2/resources/app_color.dart';
 import 'package:dz_2/resources/custumicon.dart';
+import 'package:dz_2/widget/changenotif.dart';
+import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
 import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
-
 import '../comment_widget.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
@@ -27,7 +16,7 @@ class DetailInfoRecipeWidget extends StatefulWidget {
   final String photo;
   final String duration;
 
-  DetailInfoRecipeWidget({
+  const DetailInfoRecipeWidget({
     Key? key,
     required this.id,
     required this.name,
@@ -40,150 +29,44 @@ class DetailInfoRecipeWidget extends StatefulWidget {
 }
 
 class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
-  bool ingridientsHave = false;
-
   // Map<String, dynamic>? mealData;
-  Map<String, dynamic>? mealDetails = {};
 
-  List<String> instructions = [];
-  List<bool> chekboxValues = [];
-  List<Ingredient> ingredientr = [];
-  List<MeasureUnit> measureUnitInfo = [];
-  List<RecipeStep> recipeStep = [];
   var test = RecipesIngredientListModel();
+  var recipeStepModel = RecipeStepModel();
+  var recipeModel = RecipesListModel();
+
   @override
   initState() {
     // fetchRecipeIngredients(int.parse(widget.id));
     // fetchIngredientsMeasureUnit();
-    fetchRecipeStepLinks(int.parse(widget.id));
+    // fetchRecipeStepLinks(int.parse(widget.id));
     test.loadRecipeList(int.parse(widget.id));
+    recipeStepModel.loadRecipeStepLink(int.parse(widget.id));
 
-    fetchRecipeStep();
+    // fetchRecipeStep();
     // MeasureUnitModel().loadMeasureUnit();
     // getLocalDataIngr();
     super.initState();
   }
 
-  bool isFavorite = true;
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
-
-  void toggleIngridients() {
-    setState(() {
-      ingridientsHave = true;
-    });
-  }
-
-  List<RecipeStepLink> recipeStepLink = [];
-  List<RecipeStepLink> getLocalDataRecipeStepLink() {
-    return Hive.box<RecipeStepLink>('recipeStepLinkInfo').values.toList();
-  }
-
-  List<RecipeStep> getLocalDataRecipeStep() {
-    return Hive.box<RecipeStep>('recipeStepInfo').values.toList();
-  }
-
-  Future<List<RecipeStepLink>> fetchRecipeStepLinks(
-    ricepiIdd,
-  ) async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.none) {
-      return getLocalDataRecipeStepLink();
-    } else {
-      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step_link';
-
-      final response = await http.get(Uri.parse(apiUrl));
-      if (response.statusCode == 200) {
-        await fetchRecipeStep();
-        List<dynamic> data = jsonDecode(response.body);
-        // var bb = measureUnit
-        //     .firstWhere((element) => element.id == element.measureUnit.id)
-        //     .id;
-        recipeStepLink = data
-            .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
-            .map((e) => RecipeStepLink(
-                id: e['id'],
-                number: e['number'],
-                recipeId: e['recipe']['id'],
-                stepId: RecipeStep(
-                    id: e['step']['id'],
-                    name: recipeStep
-                        .firstWhere((step) => step.id == e['step']['id'])
-                        .name,
-                    duration: recipeStep
-                        .firstWhere((step) => step.id == e['step']['id'])
-                        .duration)))
-            .toList();
-        setState(() {});
-
-        // Добавление данных в базу Hive
-        Hive.box<RecipeStepLink>('recipeStepLinkInfo').clear();
-        Hive.box<RecipeStepLink>('recipeStepLinkInfo').addAll(recipeStepLink);
-
-        // recipeStepLinkBox.clear();
-        // recipeStepLinkBox.addAll(recipeStepLink);
-        return recipeStepLink;
-      } else {
-        throw Exception('Failed to fetch recipe ingredients');
-      }
-    }
-  }
-
-  Future<List<RecipeStep>> fetchRecipeStep() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    // final Box<RecipeStep> recipeStepBox = Hive.box<RecipeStep>('recipeStep');
-
-    if (connectivityResult == ConnectivityResult.none) {
-      return getLocalDataRecipeStep();
-    } else {
-      String apiUrl = 'https://foodapi.dzolotov.tech/recipe_step';
-
-      final response = await http.get(Uri.parse(apiUrl));
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        // var bb = measureUnit
-        //     .firstWhere((element) => element.id == element.measureUnit.id)
-        //     .id;
-        recipeStep = data
-            // .where((recipeId) => recipeId['recipe']['id'] == ricepiIdd)
-            .map((e) => RecipeStep(
-                  id: e['id'],
-                  name: e['name'],
-                  duration: e['duration'],
-                ))
-            .toList();
-        setState(() {});
-
-        // Добавление данных в базу Hive
-
-        Hive.box<RecipeStep>('recipeStepInfo').clear();
-        Hive.box<RecipeStep>('recipeStepInfo').addAll(recipeStep);
-        // recipeStepBox.clear();
-        // recipeStepBox.addAll(recipeStep);
-        return recipeStep;
-      } else {
-        throw Exception('Failed to fetch recipe ingredients');
-      }
-    }
-  }
+  bool ingridientsHave = false;
 
   @override
   Widget build(BuildContext context) {
     // Provider.of<Test>(context).isExpanded;
     var isTimerVisible = context.watch<Test>().isTimerVisible;
-    //  Provider.of<Test>(context).isTimerVisible;
 
-    chekboxValues = List<bool>.filled(recipeStepLink.length, false);
-
-    final stepCook = StepCookWidget(
-      stepcookInfo: recipeStepLink,
-      duration: recipeStepLink,
-      chekValues: chekboxValues,
+    var isFavorite = Provider.of<RecipesListModel>(
+      context,
     );
+    var recipeInfoWidget = RecipeInfoListLocal(
+        id: int.parse(widget.id),
+        name: widget.name,
+        photo: widget.photo,
+        duration: int.parse(widget.duration));
+    bool isFavor = Provider.of<RecipesListModel>(context, listen: false)
+        .isFavorite(recipeInfoWidget);
+    //  Provider.of<Test>(context).isTimerVisible;
 
     if (widget.name.isEmpty) {
       return const Scaffold(
@@ -247,7 +130,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 80),
                                 child: Text(
-                                  '${widget.duration}',
+                                  widget.duration,
                                   style: TextStyle(
                                     color: isTimerVisible
                                         ? Colors.white
@@ -304,15 +187,23 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 height: 45,
                                 width: 45,
                                 child: IconButton(
-                                  icon: isFavorite
-                                      ? const Icon(
+                                  icon: isFavor
+                                      ? const RiveAnimation.asset(
+                                          'assets/heart.riv')
+                                      : const Icon(
                                           Icons.favorite,
                                           size: 25,
                                           color: Colors.black,
-                                        )
-                                      : const RiveAnimation.asset(
-                                          'assets/heart.riv'),
-                                  onPressed: toggleFavorite,
+                                        ),
+                                  onPressed: () {
+                                    if (isFavor) {
+                                      isFavorite.removeFromFavorites(
+                                          recipeInfoWidget);
+                                    } else {
+                                      isFavorite
+                                          .addToFavorites(recipeInfoWidget);
+                                    }
+                                  },
                                   iconSize: 24.0,
                                 ),
                               ),
@@ -409,7 +300,9 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                     Colors.white,
                                   ),
                                 ),
-                                onPressed: toggleIngridients,
+                                onPressed: () => setState(() {
+                                      ingridientsHave = true;
+                                    }),
                                 child: const Text(
                                   'Проверить наличие',
                                   style: TextStyle(
@@ -428,7 +321,21 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                       ),
                       Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: stepCook),
+                          child: ChangeNotifierProvider(
+                            create: ((context) => recipeStepModel),
+                            child: StepCookWidget(
+                              chekboxValues: const [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                              ],
+                            ),
+                          )),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15),
