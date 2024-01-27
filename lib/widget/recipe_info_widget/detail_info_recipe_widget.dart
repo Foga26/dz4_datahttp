@@ -1,5 +1,19 @@
+<<<<<<< HEAD
 import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/widget/state_of_cook.dart';
+=======
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:dz_2/resources/remote_ingredient.dart';
+
+import 'package:dz_2/widget/state_of_cook.dart';
+
+import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
+import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
+>>>>>>> 2281c50a63fa27e05d4e36a3cd4338a14c54e1b7
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
@@ -271,7 +285,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                             // height: 297,
                             child: Padding(
                                 padding:
-                                    const EdgeInsets.only(right: 10, left: 8),
+                                    const EdgeInsets.only(right: 0, left: 1),
                                 child: ChangeNotifierProvider(
                                     create: (context) => test,
                                     child: RecipeIngredientList())),
@@ -321,6 +335,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 fontSize: 16)),
                       ),
                       Padding(
+<<<<<<< HEAD
                           padding: const EdgeInsets.only(top: 20),
                           child: ChangeNotifierProvider(
                             create: ((context) => recipeStepModel),
@@ -337,6 +352,12 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                               ],
                             ),
                           )),
+=======
+                          padding: const EdgeInsets.only(
+                            top: 20,
+                          ),
+                          child: stepCook),
+>>>>>>> 2281c50a63fa27e05d4e36a3cd4338a14c54e1b7
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15),
