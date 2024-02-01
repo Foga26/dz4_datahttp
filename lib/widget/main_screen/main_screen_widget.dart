@@ -14,7 +14,7 @@ class MainScreenwidget extends StatefulWidget {
 }
 
 class _MainScreenwidgetState extends State<MainScreenwidget> {
-  int _selectedTab = 0;
+  int _selectedTab = 1;
   var model = RecipesListModel();
   var test = RecipesIngredientListModel();
 

@@ -58,24 +58,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (
-            context,
-          ) =>
-              Test(),
-        ),
-        ChangeNotifierProvider(
-          create: (
-            context,
-          ) =>
-              RecipesListModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (
-            context,
-          ) =>
-              RecipeStepModel(),
-        ),
+        ChangeNotifierProvider(create: (context) => Test()),
+        ChangeNotifierProvider(create: (context) => RecipesListModel()),
+        ChangeNotifierProvider(create: (context) => RecipeStepModel()),
       ],
       child: MaterialApp(
         routes: mainNavigation.routes,

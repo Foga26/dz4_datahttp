@@ -325,7 +325,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                           child: ChangeNotifierProvider(
                             create: ((context) => recipeStepModel),
                             child: StepCookWidget(
-                              chekboxValues: const [
+                              chekboxValues: [
                                 false,
                                 false,
                                 false,

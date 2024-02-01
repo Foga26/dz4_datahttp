@@ -20,15 +20,11 @@ class MainNavigation {
     '/main': (context) => const MainScreenwidget(),
     '/recipes': (context) => RecipesListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(
-          // mealId: 'id',
-          name: 'name', photo: 'photo', duration: 'duration',
+          name: 'name',
+          photo: 'photo',
+          duration: 'duration',
           id: 'id',
-
-          // RecipeInfoList.fromJson(json.encoder as Map<String, dynamic>)
-          //     .id
-          //     .toString(),
         ),
-    // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
     '/auth': (context) => const AuthWidget(),
   };
 

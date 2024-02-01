@@ -1,3 +1,4 @@
+import 'package:dz_2/main.dart';
 import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/inherit_model.dart';
@@ -16,7 +17,6 @@ class RecipesListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gg = context.watch<RecipesListModel>();
     var model = NotifierProvider.watch<RecipesListModel>(context);
 
     return Scaffold(
