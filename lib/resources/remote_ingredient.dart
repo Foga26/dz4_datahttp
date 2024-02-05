@@ -78,3 +78,22 @@ class RecipeInfoList {
 
   Map<String, dynamic> toJson() => _$RecipeInfoListToJson(this);
 }
+
+@JsonSerializable()
+class User {
+  final int id;
+  final String login;
+  final String password;
+  final String? token;
+  final String? avatar;
+  User({
+    required this.id,
+    required this.login,
+    required this.password,
+    this.token,
+    this.avatar,
+  });
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}

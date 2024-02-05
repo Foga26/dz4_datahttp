@@ -1,9 +1,12 @@
 import 'package:dz_2/resources/custumicon.dart';
 import 'package:dz_2/widget/auth_widget.dart';
+import 'package:dz_2/widget/favorite_widget.dart';
 import 'package:dz_2/widget/inherit_model.dart';
 import 'package:dz_2/widget/model.dart';
 import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
+import 'package:dz_2/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../resources/app_color.dart';
 
 class MainScreenwidget extends StatefulWidget {
@@ -14,7 +17,7 @@ class MainScreenwidget extends StatefulWidget {
 }
 
 class _MainScreenwidgetState extends State<MainScreenwidget> {
-  int _selectedTab = 1;
+  int _selectedTab = 0;
   var model = RecipesListModel();
   var test = RecipesIngredientListModel();
 
@@ -30,22 +33,15 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
   void initState() {
     super.initState();
     model.loadRecipeList();
-
-    // modeltwo.loadRecipeList();
-
-    // IngredientModel().loadRecipeList();
-
-    // RecipeStepkModel().loadRecipeList();
-    // MeasureUnitModel().loadRecipeList();
-
-    // fetchMeasureUnit();
   }
 
   @override
   Widget build(BuildContext context) {
+    var isAuth = context.watch<Test>().isAuth;
     List<Widget> _widgetOption = <Widget>[
       NotifierProvider(model: model, child: const RecipesListWidget()),
-      const AuthWidget(),
+      AuthWidget(),
+      FavoriteWidget(),
     ];
     if (model.recipeInfoList.isEmpty) {
       const CircularProgressIndicator();
@@ -62,16 +58,31 @@ class _MainScreenwidgetState extends State<MainScreenwidget> {
           });
         },
         selectedItemColor: ColorApp.textColorGreen,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(CustomIcons.pizza),
-            label: 'Рецепты',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Вход',
-          ),
-        ],
+        items: isAuth
+            ? const [
+                BottomNavigationBarItem(
+                  icon: Icon(CustomIcons.pizza),
+                  label: 'Рецепты',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Вход',
+                ),
+              ]
+            : const [
+                BottomNavigationBarItem(
+                  icon: Icon(CustomIcons.pizza),
+                  label: 'Рецепты',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Аккаунт',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Избранное',
+                ),
+              ],
       ),
     );
   }

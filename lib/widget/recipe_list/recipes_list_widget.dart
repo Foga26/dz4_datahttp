@@ -1,13 +1,11 @@
-import 'package:dz_2/main.dart';
 import 'package:dz_2/resources/local_data.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
 import 'package:dz_2/widget/inherit_model.dart';
-
 import 'package:dz_2/widget/model.dart';
+import 'package:dz_2/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:provider/provider.dart';
-
 import '../../resources/app_color.dart';
 
 class RecipesListWidget extends StatelessWidget {
@@ -18,7 +16,7 @@ class RecipesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var model = NotifierProvider.watch<RecipesListModel>(context);
-
+    var isAuthFalse = context.watch<Test>().isAuth;
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.black),
@@ -96,17 +94,19 @@ class RecipesListWidget extends StatelessWidget {
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 300, top: 80),
-                              child: isFavor
-                                  ? const Icon(
-                                      Icons.favorite,
-                                      size: 25,
-                                      color: Colors.red,
-                                    )
-                                  : const Icon(
-                                      Icons.favorite,
-                                      size: 25,
-                                      color: Colors.black,
-                                    ),
+                              child: isAuthFalse
+                                  ? null
+                                  : isFavor
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          size: 25,
+                                          color: Colors.red,
+                                        )
+                                      : const Icon(
+                                          Icons.favorite,
+                                          size: 25,
+                                          color: Colors.black,
+                                        ),
                             ),
                             const Padding(
                               padding: EdgeInsets.only(top: 95, left: 165),

@@ -60,3 +60,13 @@ class RecipeStepModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+// class UserModel extends ChangeNotifier {
+//   var userData = <User>[];
+//   Future<void> loadDataUser() async {
+//     final userResponse = await fetchDataUser();
+//     userData.addAll(userResponse);
+//     notifyListeners();
+//   }
+// }

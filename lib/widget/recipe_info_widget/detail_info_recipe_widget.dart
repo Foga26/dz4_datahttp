@@ -54,6 +54,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var isAuthFalse = context.watch<Test>().isAuth;
     // Provider.of<Test>(context).isExpanded;
     var isTimerVisible = context.watch<Test>().isTimerVisible;
 
@@ -188,21 +189,49 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
                                 height: 45,
                                 width: 45,
                                 child: IconButton(
-                                  icon: isFavor
-                                      ? const RiveAnimation.asset(
-                                          'assets/heart.riv')
-                                      : const Icon(
+                                  icon: isAuthFalse
+                                      ? const Icon(
                                           Icons.favorite,
                                           size: 25,
                                           color: Colors.black,
-                                        ),
+                                        )
+                                      : isFavor
+                                          ? const RiveAnimation.asset(
+                                              'assets/heart.riv')
+                                          : const Icon(
+                                              Icons.favorite,
+                                              size: 25,
+                                              color: Colors.black,
+                                            ),
                                   onPressed: () {
-                                    if (isFavor) {
-                                      isFavorite.removeFromFavorites(
-                                          recipeInfoWidget);
+                                    if (isAuthFalse) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Нельзя добавить в избранное'),
+                                            content: const Text(
+                                                'Зайдите в аккаунт, чтобы добавить рецепт в избранное'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                                     } else {
-                                      isFavorite
-                                          .addToFavorites(recipeInfoWidget);
+                                      if (isFavor) {
+                                        isFavorite.removeFromFavorites(
+                                            recipeInfoWidget);
+                                      } else {
+                                        isFavorite
+                                            .addToFavorites(recipeInfoWidget);
+                                      }
                                     }
                                   },
                                   iconSize: 24.0,

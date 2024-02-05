@@ -359,8 +359,13 @@ Future<List<RecipeStep>> fetchRecipeStep() async {
   }
 }
 
-class RecipeState {
-  bool isFavorite;
+Future<User> fetchUser() async {
+  final response =
+      await http.get(Uri.parse('https://foodapi.dzolotov.tech/user/1'));
 
-  RecipeState({this.isFavorite = false});
+  if (response.statusCode == 200) {
+    return User.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to fetch user');
+  }
 }

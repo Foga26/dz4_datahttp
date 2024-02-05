@@ -18,14 +18,14 @@ class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
     MainNavigationRouteNames.mainPage: ((context) => const MainScreenwidget()),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => RecipesListWidget(),
+    '/recipes': (context) => const RecipesListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(
           name: 'name',
           photo: 'photo',
           duration: 'duration',
           id: 'id',
         ),
-    '/auth': (context) => const AuthWidget(),
+    '/auth': (context) => AuthWidget(),
   };
 
   Route<Object> onGenerateRoute(RouteSettings settings) {

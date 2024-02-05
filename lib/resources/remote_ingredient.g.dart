@@ -69,3 +69,19 @@ Map<String, dynamic> _$RecipeInfoListToJson(RecipeInfoList instance) =>
       'photo': instance.photo,
       'duration': instance.duration,
     };
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      id: json['id'] as int,
+      login: json['login'] as String,
+      password: json['password'] as String,
+      token: json['token'] as String?,
+      avatar: json['avatar'] as String?,
+    );
+
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      'id': instance.id,
+      'login': instance.login,
+      'password': instance.password,
+      'token': instance.token,
+      'avatar': instance.avatar,
+    };

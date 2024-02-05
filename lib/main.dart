@@ -24,27 +24,15 @@ void main() async {
   Hive.registerAdapter<Ingredient>(IngridientListInfoAdapter());
   Hive.registerAdapter<MeasureUnit>(MeasureUnitAdapter());
   Hive.registerAdapter(RecipeInfoListLocalAdapter());
-  // Hive.registerAdapter(RecipeIngredientLocalAdapter());
-  // Hive.registerAdapter(IngredientLocalAdapter());
-  // Hive.registerAdapter(MeasureUnitLocalAdapter());
-  // Hive.registerAdapter(RecipeIngredientAdapter());
-
-  // Регистрация адаптера Hive для модели данных
-
-  // Открытие Hive-коробки
 
   await Hive.openBox<RecipeInfoListLocal>('favoritesRecipe');
   await Hive.openBox('recipeIngredientsBox');
   await Hive.openBox<RecipeInfoList>('recipe');
-  // await Hive.openBox<RecipeInfoList>('measureunit');
   await Hive.openBox<RecipeStep>('recipeStepInfo');
   await Hive.openBox<RecipeStepLink>('recipeStepLinkInfo');
   await Hive.openBox<Ingredient>('recipeIngredientInfo');
   await Hive.openBox<MeasureUnit>('measureUnitBox');
-  // await Hive.openBox('meals');
-
   await Hive.openBox<RecipeIngridient>('recipeIngredientInfoDetail');
-
   await Hive.openBox('imagesFromCam');
 
   runApp(const MyApp());
@@ -61,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => Test()),
         ChangeNotifierProvider(create: (context) => RecipesListModel()),
         ChangeNotifierProvider(create: (context) => RecipeStepModel()),
+        // ChangeNotifierProvider(create: (context) => UserModel())
       ],
       child: MaterialApp(
         routes: mainNavigation.routes,
