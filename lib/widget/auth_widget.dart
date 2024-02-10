@@ -1,5 +1,6 @@
 import 'package:dz_2/resources/main_navigation.dart';
 import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:dz_2/widget/blutooth.dart';
 import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:dz_2/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
@@ -186,11 +187,16 @@ class _AuthWidgetState extends State<AuthWidget> {
             ),
           )
         : Center(
-            child: TextButton(
-              onPressed: () {
-                isAuth.isAuthChek();
-              },
-              child: Text('Выход'),
+            child: Column(
+              children: [
+                SizedBox(width: 300, height: 300, child: ProfilePage()),
+                TextButton(
+                  onPressed: () {
+                    isAuth.isAuthChek();
+                  },
+                  child: Text('Выход'),
+                ),
+              ],
             ),
           );
   }
