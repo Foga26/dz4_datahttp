@@ -18,9 +18,6 @@ class RecipesListWidget extends StatelessWidget {
     var model = NotifierProvider.watch<RecipesListModel>(context);
     var isAuthFalse = context.watch<Test>().isAuth;
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.black),
-        ),
         backgroundColor: ColorApp.backGroundColor,
         body: SafeArea(
             child: Padding(

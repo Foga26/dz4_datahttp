@@ -92,6 +92,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
               ? const Size.fromHeight(120)
               : const Size.fromHeight(75),
           child: AppBar(
+            elevation: 0,
             flexibleSpace: Column(
               children: [
                 const Padding(
