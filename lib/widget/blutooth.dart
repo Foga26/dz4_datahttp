@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Устройства блютуз'),
       ),
       body: ListView.builder(
         itemCount: devices.length,

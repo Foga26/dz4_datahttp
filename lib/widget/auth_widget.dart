@@ -189,7 +189,7 @@ class _AuthWidgetState extends State<AuthWidget> {
         : Center(
             child: Column(
               children: [
-                SizedBox(width: 300, height: 300, child: ProfilePage()),
+                Flexible(child: ProfilePage()),
                 TextButton(
                   onPressed: () {
                     isAuth.isAuthChek();
