@@ -182,7 +182,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                     onPressed: () => Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => MyApppp())),
+                                            builder: (context) =>
+                                                MyHomePage())),
                                     child: Text('TfliteModel'),
                                   ),
                                   TextButton(
