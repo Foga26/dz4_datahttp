@@ -1,5 +1,5 @@
-import 'package:dz_2/resources/local_data.dart';
-import 'package:dz_2/resources/main_navigation.dart';
+import 'package:otusrecipe/resources/local_data.dart';
+import 'package:otusrecipe/resources/main_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

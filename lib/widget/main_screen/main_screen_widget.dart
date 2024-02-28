@@ -1,10 +1,10 @@
-import 'package:dz_2/resources/custumicon.dart';
-import 'package:dz_2/widget/auth_widget.dart';
-import 'package:dz_2/widget/favorite_widget.dart';
-import 'package:dz_2/widget/inherit_model.dart';
-import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_list/recipes_list_widget.dart';
-import 'package:dz_2/widget/state_of_cook.dart';
+import 'package:otusrecipe/resources/custumicon.dart';
+import 'package:otusrecipe/widget/auth_widget.dart';
+import 'package:otusrecipe/widget/favorite_widget.dart';
+import 'package:otusrecipe/widget/inherit_model.dart';
+import 'package:otusrecipe/widget/model.dart';
+import 'package:otusrecipe/widget/recipe_list/recipes_list_widget.dart';
+import 'package:otusrecipe/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../resources/app_color.dart';

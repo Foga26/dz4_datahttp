@@ -1,14 +1,14 @@
-import 'package:dz_2/resources/local_data.dart';
-import 'package:dz_2/widget/state_of_cook.dart';
+import 'package:otusrecipe/resources/local_data.dart';
+import 'package:otusrecipe/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import 'package:dz_2/resources/app_color.dart';
-import 'package:dz_2/resources/custumicon.dart';
+import 'package:otusrecipe/resources/app_color.dart';
+import 'package:otusrecipe/resources/custumicon.dart';
 
-import 'package:dz_2/widget/model.dart';
-import 'package:dz_2/widget/recipe_info_widget/recipe_ingredient_list.dart';
-import 'package:dz_2/widget/recipe_info_widget/step_cook_widget.dart';
+import 'package:otusrecipe/widget/model.dart';
+import 'package:otusrecipe/widget/recipe_info_widget/recipe_ingredient_list.dart';
+import 'package:otusrecipe/widget/recipe_info_widget/step_cook_widget.dart';
 import '../comment_widget.dart';
 
 class DetailInfoRecipeWidget extends StatefulWidget {
@@ -89,7 +89,7 @@ class _DetailInfoRecipeWidgetState extends State<DetailInfoRecipeWidget> {
         backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: isTimerVisible
-              ? const Size.fromHeight(120)
+              ? const Size.fromHeight(130)
               : const Size.fromHeight(75),
           child: AppBar(
             elevation: 0,

@@ -1,4 +1,4 @@
-import 'package:dz_2/widget/model.dart';
+import 'package:otusrecipe/widget/model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

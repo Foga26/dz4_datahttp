@@ -1,8 +1,8 @@
-import 'package:dz_2/resources/local_data.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
+import 'package:otusrecipe/resources/local_data.dart';
+import 'package:otusrecipe/resources/remote_ingredient.dart';
 
-import 'package:dz_2/widget/recipe_info_widget/recipe_step_link.dart';
-import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
+import 'package:otusrecipe/widget/recipe_info_widget/recipe_step_link.dart';
+import 'package:otusrecipe/widget/recipe_list/recipes_model_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

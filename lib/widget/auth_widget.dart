@@ -1,8 +1,8 @@
-import 'package:dz_2/resources/main_navigation.dart';
-import 'package:dz_2/resources/remote_ingredient.dart';
-import 'package:dz_2/widget/blutooth.dart';
-import 'package:dz_2/widget/recipe_list/recipes_model_list_widget.dart';
-import 'package:dz_2/widget/state_of_cook.dart';
+import 'package:otusrecipe/resources/main_navigation.dart';
+import 'package:otusrecipe/resources/remote_ingredient.dart';
+import 'package:otusrecipe/widget/blutooth.dart';
+import 'package:otusrecipe/widget/recipe_list/recipes_model_list_widget.dart';
+import 'package:otusrecipe/widget/state_of_cook.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../resources/app_color.dart';

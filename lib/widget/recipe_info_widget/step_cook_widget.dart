@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:dz_2/resources/app_color.dart';
-import 'package:dz_2/widget/model.dart';
+import 'package:otusrecipe/resources/app_color.dart';
+import 'package:otusrecipe/widget/model.dart';
 
 import '../state_of_cook.dart';
 
