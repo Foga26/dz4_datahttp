@@ -1,22 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:dz_2/resources/app_color.dart';
+import 'package:otusrecipe/resources/app_color.dart';
+import 'package:otusrecipe/widget/model.dart';
 
-import '../changenotif.dart';
+import '../state_of_cook.dart';
 
 // ignore: must_be_immutable
 class StepCookWidget extends StatefulWidget {
-  var stepcookInfo = [];
-  var stepNumber = 0;
-  var chekValues =
-      []; // список значений false по количеству строк в списке stepcookInfo
-
+  List<bool> chekboxValues;
   StepCookWidget({
     Key? key,
-    required this.stepcookInfo,
-    required this.stepNumber,
-    required this.chekValues,
+    required this.chekboxValues,
   }) : super(key: key);
 
   @override
@@ -42,15 +38,16 @@ class _StepCookWidgetState extends State<StepCookWidget>
   @override
   Widget build(BuildContext context) {
     bool ready = Provider.of<Test>(context).kok;
+    var resipeStep = context.watch<RecipeStepModel>().recipeStepLink;
 
     return SizedBox(
       child: ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: widget.stepcookInfo.length,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: resipeStep.length,
           itemBuilder: (BuildContext context, int index) {
             var instructionNumber = index + 1;
-            final instructionText = widget.stepcookInfo[index];
+            final instructionText = resipeStep[index].stepId.name;
             return Padding(
                 padding: const EdgeInsets.only(top: 24, left: 15, right: 15),
                 child: Column(
@@ -102,7 +99,7 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 33, right: 20),
+                                          top: 33, right: 10),
                                       child: AnimatedBuilder(
                                         animation: _animation!,
                                         builder: (context, child) {
@@ -123,12 +120,12 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                                           ? ColorApp
                                                               .textColorDarkGreen
                                                           : ColorApp.colorGrey),
-                                                  value:
-                                                      widget.chekValues[index],
+                                                  value: widget
+                                                      .chekboxValues[index],
                                                   onChanged: ready
                                                       ? (value) {
                                                           setState(() {
-                                                            if (widget.chekValues[
+                                                            if (widget.chekboxValues[
                                                                     index] =
                                                                 value!) {
                                                               _controller
@@ -138,9 +135,6 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                                                   ?.reverse();
                                                             }
                                                           });
-
-                                                          // widget.chekValues[
-                                                          //     index] = value;
                                                         }
                                                       : null),
                                             ),
@@ -150,9 +144,9 @@ class _StepCookWidgetState extends State<StepCookWidget>
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 5, top: 10),
+                                          top: 10, right: 5),
                                       child: Text(
-                                        '2',
+                                        '${resipeStep[index].stepId.duration} мин',
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: ready

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widget/auth_widget.dart';
-import '../widget/inherit_model.dart';
-import '../widget/main_screen/main_screen_model.dart';
+
 import '../widget/main_screen/main_screen_widget.dart';
-import '../widget/recipe_info_widget.dart';
+
 import '../widget/recipe_info_widget/detail_info_recipe_widget.dart';
 import '../widget/recipe_list/recipes_list_widget.dart';
 
@@ -17,15 +16,16 @@ abstract class MainNavigationRouteNames {
 
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRouteNames.mainPage: ((context) => NotifierProvider(
-        model: MainScreenModel(), child: const MainScreenwidget())),
+    MainNavigationRouteNames.mainPage: ((context) => const MainScreenwidget()),
     '/main': (context) => const MainScreenwidget(),
-    '/recipes': (context) => const RecipesModelListWidget(),
+    '/recipes': (context) => const RecipesListWidget(),
     '/recipeInfo': (context) => DetailInfoRecipeWidget(
-          mealId: 'mealId',
+          name: 'name',
+          photo: 'photo',
+          duration: 'duration',
+          id: 'id',
         ),
-    // '/recipeInfoPokeboul': (context) => const PokeboulInfoWidget(),
-    '/auth': (context) => const AuthWidget(),
+    '/auth': (context) => AuthWidget(),
   };
 
   Route<Object> onGenerateRoute(RouteSettings settings) {
@@ -61,8 +61,12 @@ class MainNavigation {
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return DetailInfoRecipeWidget(
-              mealId: args['mealId'].toString(),
-            );
+
+                // mealId: args['id'].toString(),
+                name: args['name'],
+                photo: args['photo'],
+                duration: args['duration'].toString(),
+                id: args['id'].toString());
           },
         );
       default:
